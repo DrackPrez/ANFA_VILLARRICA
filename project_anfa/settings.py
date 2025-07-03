@@ -31,13 +31,11 @@ DEBUG = True # Esto es una buena práctica para controlar DEBUG
 ALLOWED_HOSTS = []
 CSRF_TRUSTED_ORIGINS = []
 if not DEBUG:
-    RAILWAY_DOMAIN = os.environ.get('RAILWAY_PUBLIC_DOMAIN', 'anfavillarrica-production.up.railway.app')
-    # Siempre agrega el dominio de Railway
-    ALLOWED_HOSTS.append('anfavillarrica-production.up.railway.app')
-    CSRF_TRUSTED_ORIGINS.append('https://anfavillarrica-production.up.railway.app')
-    if RAILWAY_DOMAIN and RAILWAY_DOMAIN != 'anfavillarrica-production.up.railway.app':
-        ALLOWED_HOSTS.append(RAILWAY_DOMAIN)
-        CSRF_TRUSTED_ORIGINS.append(f"https://{RAILWAY_DOMAIN}")
+    # Siempre agrega el dominio de Railway a ALLOWED_HOSTS
+    ALLOWED_HOSTS = ['anfavillarrica-production.up.railway.app']
+    # Y a CSRF_TRUSTED_ORIGINS solo con https
+    CSRF_TRUSTED_ORIGINS = ['https://anfavillarrica-production.up.railway.app']
+    # Si usas dominio personalizado, agrégalo aquí también
     # ALLOWED_HOSTS.append('tudominio.com')
     # CSRF_TRUSTED_ORIGINS.append('https://tudominio.com')
 else:
