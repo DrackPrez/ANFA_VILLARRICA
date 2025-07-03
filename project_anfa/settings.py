@@ -31,7 +31,7 @@ DEBUG = os.environ.get('DJANGO_DEBUG', 'False') == 'True'
 
 ALLOWED_HOSTS = []
 if not DEBUG:
-    ALLOWED_HOSTS = [os.environ.get('RAILWAY_PUBLIC_DOMAIN')]
+    ALLOWED_HOSTS = [os.environ.get('anfavillarrica-production.up.railway.app')]
     # Si tienes subdominios o dominios personalizados, añádelos aquí también
     # ALLOWED_HOSTS.append('your-custom-domain.com')
     # ALLOWED_HOSTS.append('www.your-custom-domain.com')
