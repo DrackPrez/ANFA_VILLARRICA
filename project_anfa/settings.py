@@ -25,7 +25,18 @@ SECRET_KEY = 'django-insecure-bd!q_oz_0pu)h#x&f=bhb@@d+1$1d&2=h83&m2s##9%2r*re#&
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+import os
+
+DEBUG = os.environ.get('DJANGO_DEBUG', 'False') == 'True'
+
 ALLOWED_HOSTS = []
+if not DEBUG:
+    ALLOWED_HOSTS = [os.environ.get('RAILWAY_PUBLIC_DOMAIN')]
+    # Si tienes subdominios o dominios personalizados, añádelos aquí también
+    # ALLOWED_HOSTS.append('your-custom-domain.com')
+    # ALLOWED_HOSTS.append('www.your-custom-domain.com')
+else:
+    ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
 
 # Application definition
