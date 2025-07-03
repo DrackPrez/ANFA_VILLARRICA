@@ -1,21 +1,24 @@
 # nixpacks.toml
 
+# Deja que Nixpacks maneje la instalación de requirements.txt automáticamente.
+# No necesitamos especificar [phases.install] ni repetir pip install en [phases.build].
+# Nixpacks lo hace por defecto para proyectos Python.
+
 [phases.build]
-# Forzamos la instalación de dependencias aquí, aunque Nixpacks lo haga por defecto.
-# Esto asegura que la capa Docker para la instalación se cree antes de cualquier comando de Django.
+# Si necesitas collectstatic, este es un buen lugar.
+# Se ejecuta después de que las dependencias (incluyendo Django) ya han sido instaladas
+# por la lógica interna de Nixpacks.
 commands = [
-  "python -m venv --copies /opt/venv", # Crear el entorno virtual si no está
-  ". /opt/venv/bin/activate",         # Activar el entorno virtual
-  "pip install -r requirements.txt",  # Instalar las dependencias
-  "python manage.py collectstatic --noinput" # También un buen lugar para collectstatic
+  "python manage.py collectstatic --noinput"
 ]
 
 [phases.release]
-# Ahora, 'migrate' se ejecutará después de que las dependencias se instalaron en la fase 'build'.
+# El comando migrate debe ir aquí.
+# Esta fase se ejecuta DESPUÉS de la fase 'build' y la instalación de dependencias,
+# y ANTES de que la aplicación empiece a servir tráfico.
 commands = [
   "python manage.py migrate --noinput"
 ]
 
 [start]
 cmd = "/opt/venv/bin/gunicorn project_anfa.wsgi:application --bind 0.0.0.0:$PORT"
-# IMPORTANTE: Asegúrate de usar el gunicorn del entorno virtual
