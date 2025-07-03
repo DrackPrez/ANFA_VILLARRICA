@@ -1,24 +1,19 @@
 # nixpacks.toml
 
-# Deja que Nixpacks maneje la instalación de requirements.txt automáticamente.
-# No necesitamos especificar [phases.install] ni repetir pip install en [phases.build].
-# Nixpacks lo hace por defecto para proyectos Python.
+# Ya no necesitamos una fase de build explícita si solo contenía collectstatic.
+# Nixpacks suele hacer collectstatic automáticamente si Django es detectado.
+# Si tus estáticos no funcionan, podemos añadirlo de vuelta, pero por ahora simplifiquemos.
+# Si necesitas collectstatic, se podría añadir aquí:
+# [phases.build]
+# commands = ["python manage.py collectstatic --noinput"]
 
-[phases.build]
-# Si necesitas collectstatic, este es un buen lugar.
-# Se ejecuta después de que las dependencias (incluyendo Django) ya han sido instaladas
-# por la lógica interna de Nixpacks.
-commands = [
-  "python manage.py collectstatic --noinput"
-]
 
-[phases.release]
-# El comando migrate debe ir aquí.
-# Esta fase se ejecuta DESPUÉS de la fase 'build' y la instalación de dependencias,
-# y ANTES de que la aplicación empiece a servir tráfico.
-commands = [
-  "python manage.py migrate --noinput"
-]
+# Elimina la sección [phases.release] para migrate.
+# [phases.release]
+# commands = ["python manage.py migrate --noinput"]
 
+
+# ¡La magia ocurre aquí!
+# Ejecutamos migrate y luego iniciamos Gunicorn, todo en la misma línea (o con &&).
 [start]
-cmd = "/opt/venv/bin/gunicorn project_anfa.wsgi:application --bind 0.0.0.0:$PORT"
+cmd = "/opt/venv/bin/python manage.py migrate --noinput && /opt/venv/bin/gunicorn project_anfa.wsgi:application --bind 0.0.0.0:$PORT"
