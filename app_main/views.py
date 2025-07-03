@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Clubes, EncargadoSerie
+from django.views.decorators.csrf import csrf_exempt
 
 def menu(request):
     return render(request, 'menu.html')
@@ -11,6 +12,7 @@ def clubes(request):
     clubes = Clubes.objects.all()
     return render(request, 'clubes.html', {'clubes': clubes})
 
+@csrf_exempt  # Add this decorator for testing only!
 def clubes_add(request):
     if request.method == 'POST':
         nombre = request.POST.get('nombre')
