@@ -1,8 +1,22 @@
 # nixpacks.toml
 
+
 [phases.setup]
+# La instalación de dependencias de pip (pip install -r requirements.txt)
+# generalmente es manejada automáticamente por Nixpacks para proyectos Python.
+# Si la dejas aquí, asegúrate de que sea la ÚNICA cosa en setup si no tienes otras herramientas de sistema.
+# commands = ["pip install -r requirements.txt"]
+
+# Si solo pones pip install -r requirements.txt en setup, y no tienes otras
+# herramientas de sistema, Nixpacks ya lo detecta y lo hace por defecto.
+# Así que esta sección [phases.setup] podría ser incluso omitida.
+
+
+# La fase [phases.release] es donde se ejecutan comandos post-build,
+# ANTES de que el comando [start] se ejecute.
+# Es el lugar IDEAL para las migraciones de la base de datos.
+[phases.release]
 commands = [
-  "pip install -r requirements.txt",
   "python manage.py migrate --noinput"
 ]
 
