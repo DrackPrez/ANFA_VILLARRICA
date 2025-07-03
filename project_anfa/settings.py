@@ -28,19 +28,12 @@ SECRET_KEY = 'django-insecure-bd!q_oz_0pu)h#x&f=bhb@@d+1$1d&2=h83&m2s##9%2r*re#&
 
 DEBUG = True # Esto es una buena práctica para controlar DEBUG
 
-ALLOWED_HOSTS = []
-CSRF_TRUSTED_ORIGINS = []
-if not DEBUG:
-    # Siempre agrega el dominio de Railway a ALLOWED_HOSTS
-    ALLOWED_HOSTS = ['anfavillarrica-production.up.railway.app']
-    # Y a CSRF_TRUSTED_ORIGINS solo con https
-    CSRF_TRUSTED_ORIGINS = ['https://anfavillarrica-production.up.railway.app']
-    # Si usas dominio personalizado, agrégalo aquí también
-    # ALLOWED_HOSTS.append('tudominio.com')
-    # CSRF_TRUSTED_ORIGINS.append('https://tudominio.com')
-else:
-    ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
-    CSRF_TRUSTED_ORIGINS = ['http://127.0.0.1', 'http://localhost','anfavillarrica-production.up.railway.app']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'anfavillarrica-production.up.railway.app']
+CSRF_TRUSTED_ORIGINS = [
+    'http://127.0.0.1',
+    'http://localhost',
+    'https://anfavillarrica-production.up.railway.app'
+]
 
 
 # Application definition
@@ -136,6 +129,13 @@ USE_TZ = True
 STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
+# WhiteNoise para servir archivos estáticos en producción
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+# Default primary key field type
+# https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # WhiteNoise para servir archivos estáticos en producción
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
