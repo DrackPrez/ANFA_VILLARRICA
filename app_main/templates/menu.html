@@ -1,0 +1,107 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ANFA Villarrica</title>
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<style>
+    body {
+        background: linear-gradient(135deg, #2d2a2e 0%, #7c1d1d 100%);
+    }
+</style>
+</head>
+<body class="text-gray-100">
+<div class="container mx-auto p-4 bg-gray-900 bg-opacity-90 rounded-xl shadow-lg">
+<header class="flex flex-col md:flex-row justify-between items-center mb-8">
+<div class="flex items-center mb-4 md:mb-0">
+<img alt="Logo ANFA" class="h-24 w-24 mr-4" src="{% static 'img/logo-anfa-villarrica.png' %}"/>
+<div>
+<h1 class="text-3xl font-extrabold text-red-600 drop-shadow">ANFA Villarrica</h1>
+<p class="text-sm text-gray-300">Liga deportiva</p>
+<p class="text-sm text-gray-300">Asociación de Fútbol de Villarrica</p>
+</div>
+</div>
+
+<div class="flex space-x-4 justify-end mt-2">
+    <a href="https://www.instagram.com/anfavillarrica?igsh=MTYyeTczem44dXNhcg==/" target="_blank" rel="noopener noreferrer">
+        <img alt="Instagram" class="h-10 w-10" src="{% static 'img/instagram-icon.svg' %}"/>
+    </a>
+    <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer">
+        <img alt="Facebook" class="h-10 w-10" src="{% static 'img/facebook-icon.svg' %}"/>
+    </a>
+</div>
+
+</header>
+<main>
+<section class="mb-12 p-6 border-2 border-red-700 rounded-lg bg-gray-800 bg-opacity-80">
+<h2 class="text-xl font-semibold mb-2 text-center text-red-300">QUIÉNES SOMOS</h2>
+<p class="text-gray-200 text-center mb-4">La ANFA Villarrica (Asociación de Fútbol de Villarrica) es la liga deportiva que agrupa a 10 clubes asociados en Villarrica. Organizamos el Campeonato ANFA Villarrica 2025 @demarca_sport en el Estadio Municipal de Villarrica, promoviendo la pasión y el desarrollo del fútbol local.</p>
+<div class="text-center p-4 border border-dashed border-red-700 rounded-md">
+<p class="text-lg text-white">DIRECTORIO</p>
+
+<div class="flex flex-col md:flex-row justify-center items-center gap-4 mt-6">
+    <a href="{% url 'clubes' %}" class="bg-white text-red-700 font-semibold px-6 py-3 rounded-lg shadow hover:bg-red-100 transition">Clubes</a>
+    
+    <a href="{% url 'encargados_clubes' %}" class="bg-white text-red-700 font-semibold px-6 py-3 rounded-lg shadow hover:bg-red-100 transition">Encargados-Clubes</a>
+</div>
+</div>
+</section>
+<section class="mb-12 p-6 border-2 border-red-700 rounded-lg bg-gray-800 bg-opacity-80">
+<h2 class="text-xl font-semibold mb-4 text-center text-red-300">NUESTROS CLUBES</h2>
+<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
+<div class="flex flex-col items-center p-2">
+<img alt="Club Logo 1" class="h-16 w-auto mb-1" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCphwudQo0OEp3fQw-N9i4bX2XvQXbjOrPx-ir776ngk148hw3Z6ho57PEhqdSGrrQ6Csx8TI1RYY2bjsOFx97UWIAtIWdKBhLx9_U5mMwd-YCAealSZPpyK2_hy7KKeXldIM4GS-vMymXtHPHJw-JDLqcslND-O2Js6L4yNkKjowig5e6KlKQr6qMbO_D6sZp1WDWr_17Y6es5nM1o_nzx157VLvHhaqHkW7A1y5kWOsSpBfM_h9Y_Q_oZq3jA97OXnLfULDT0Rm4"/>
+</div>
+<div class="flex flex-col items-center p-2">
+<img alt="Club Logo 2" class="h-16 w-auto mb-1" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD159AiorZneISChPkOfnL1jkuY6Nun7CYQ3x-cBSLgJS7sGZrffaKeR7qAPsdGndjblMl6ND2oaivdQKnH9QO71zTdX9c4CGpR5agJatOniwD7poK8p0jH4ZW8wVzpwQa7ShFfKB_1Uu9J_NRNAgNF9wJwUH_BPL5sapHUOOF5uKCrrDmDedXEchdrx24jjGMFZlwKSZmlth7awPr2FTSpSA7lbjrbpHHS44spNJSxVaYeQ_VU4sh8zhbmEzwRD2ES8kInvV_Ya6g"/>
+</div>
+<div class="flex flex-col items-center p-2">
+<img alt="Club Logo 3" class="h-16 w-auto mb-1" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAnLnJ1t0dFLtQue3XcLJy1bl7evBIifWFUNs5Cndwpue7BbR_m7rrL5_hyhlMJh0_GDmVWc3sJr1s6sSkeXEJE2YR3rL2a_7fD7_V0bc6RFtTotIVHuYn6zngOM9Q5zx9oipwSmatdxhy_kgAUVUWz9jJFJ0t3i13QRvOzyoOL4ZAA4xtxieTq5xWQ3Naq406BRMD3xUVDjtEWEZA9A0RtIfQ3Ly4nq9DAK1q3btVsnxUw0z-ycWQUQi8Dr-i6B3y4dct4atsnU0w"/>
+</div>
+<div class="flex flex-col items-center p-2">
+<img alt="Club Logo 4" class="h-16 w-auto mb-1" src="https://lh3.googleusercontent.com/aida-public/AB6AXuADVVtdHnmCfrax1_dOo1-EfHrmzXN0YRihYjCkjc5hYsU42bZP-ngbJbQCKvy0DeGtAKXkqocExEPR87lZ-TVBIqvd8O5PvQDdSwv03ciBmkA7CAKf99uni9dqaoB-TaHfBStQnHqCaWyZqhgg81Hle8oPY_ZBSZQzs77nrt13lNUw-Ccgux1xUNO8IN2wk4TyFuEPhmQNUOe2m-9SDmKZvEiatfupdHCHn0ow1vGEbCiRbCEibJ8f93lRau5tuHu0SE074xyiXiI"/>
+</div>
+<div class="flex flex-col items-center p-2">
+<img alt="Club Logo 5" class="h-16 w-auto mb-1" src="https://lh3.googleusercontent.com/aida-public/AB6AXuABA7NYX9m5V33e-TfK-LCHX9tO4nY2gKT3iM9wMuuT_NWhCigmTphBd2ExgykQwPjDhinyE3Xb5VUZMOl-jNdlPKYVwZooofBDogPcsxRsSFXx0meAfdSGkjfTAJqj-5UZISvZppyKKlqs_8Hw7a4kQctzLBIIWjhlNuAydwwhix3EvSxQiW8dwujwBdv3iyYQIYptrhVY6JMc5ZTCByT5MqaCoS_dqQ0jsIzij_Kg1YAg0T6glQjvX1Q4RaoKoFvfYbB88g7A7vk"/>
+</div>
+<div class="flex flex-col items-center p-2">
+<img alt="Club Logo 6" class="h-16 w-auto mb-1" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCygleTbsaPSyLqEUCYiOV6OAPnTwNdz28WAuLE4H5LMQUeYnIw0tRo2WqEul8Jdi5FJpC93zo-PsOrQTuVKUM1MnvcfqfXF3JHg5mPLEfT1n9lQvLvrd-M6wFQzcs6GAPo1ewaakJBvCGGTnAQPJkYjcpBD30xTO9TUyLmgCRRy82ibzBJKszdSzrvXrjX9IHkM-P_FpvVOQ6jP62YcbL9U3dtbVsHSOuH0I-aCzWkm22hMuGAWNRFl74N4wh-53ZFLqLSFxbLjOE"/>
+</div>
+<div class="flex flex-col items-center p-2">
+<img alt="Club Logo 7" class="h-16 w-auto mb-1" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA_tNaypNy2KkIn91gQxBZiK4wvOGb6XIMteBqpE98cOn6z7UK1sqKdIRAsHl8g78XVsMTbGN8BMZvLMZq4qiXazx-Y0prwee9GM9m4Ul_mXCViaMVtukmqUdiO14UUmXblrR-0F_XEuu-hUYA7SCgxd8_oVg29m1hVQ5bw-s5ueIc7oqbmg1OnczNtv44m7Affx3os1Cz1mx0uHCtvGXglAxiU1K6_ucx6xcHha_ItOCh1xCIis0-lggiD4h8RLBN0x6exkf41_Yc"/>
+</div>
+<div class="flex flex-col items-center p-2">
+<img alt="Club Logo 8" class="h-16 w-auto mb-1" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA3VGOM8Qcm32T98OE8qTttJdS0Ts7kCxyftbJNWW493s1S4rJ8rWJF3Og2e-dkv0pyXgsqrWmf-GbZs4DQnNf5A6xRzcEcXLGMHhaktDx6YKn5tvf9XvRH3yuAf9Hb5JqelyCiqNgjBnChbzuNwhOnjkS36lVJioqgQo6X64_OdWTFhNZQ6zAnYN8lsbyKaGcQrSaYd0mu05wJnXhrusg7ZANslteySQAAqsHWu_jmY81ewGkvL-FdF_kQ_SQ1lq7muvS4gcLJH4c"/>
+</div>
+<div class="flex flex-col items-center p-2">
+<img alt="Club Logo 9" class="h-16 w-auto mb-1" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDfnnHsOGlE25lOe9-_oCOjNSG6yhlbSc81ZQfLI9lloNxV8_XF_rFd_Z3FlZgolsICX4TJOHIJ2P0OjD_ACMzwRh3yYDWJbg0mMSpuHNE9gG0E98mmPQk6a0nDZSZl-HotjKKSQFqeqwVnfa3Erbg9CnLfzGNllZKXesMl3ozNfueZNYxPNXArwgPWbeV9NVmsV9V-WLMd5wh7JOE2FHFvA1oEpCrcPhDiWSzb43mpzeGDo-KCkuv8SeYI6o-seGFzBFXqv2p3DwQ"/>
+</div>
+<div class="flex flex-col items-center p-2">
+<img alt="Club Logo 10" class="h-16 w-auto mb-1" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBVMhDyfAAF9KqqiNsw0MBfFxMEFz44GT6hWzBZFg1mA3EBw-TJV-EDAxYhP-J9fX8NnTH1EvguHUDsSc1-BYzzB0Lf4HDBUovqWCOZ7OMZZQkZn0WvHgbL5pLB_TmIBko_4A7urvxeMkkyu6k6NGghiFptvZd1qsUDq7P5YQsUHJjUXDtluDAHF_YCsG4IIDYrrj_MGTtO1PHac0ys7HxGF0obRboVTu_AUCSoF83qAHCtcifd0RWo8gn333G6QWwZBsY-RTTJTU0"/>
+</div>
+</div>
+</section>
+<section class="p-6 border-2 border-red-700 rounded-lg bg-gray-800 bg-opacity-80">
+<h2 class="text-xl font-semibold mb-6 text-center text-red-300">CAMPEONATO DEMARCA SPORT ANFA VILLARRICA 2025</h2>
+<div class="flex flex-wrap justify-center gap-4">
+<a href="{% url '3ra_infantil' %}">
+    <span class="bg-red-600 text-white text-sm font-medium px-4 py-2 rounded-full hover:bg-red-700 transition">3RA INFANTIL</span>
+</a>
+<span class="bg-red-600 text-white text-sm font-medium px-4 py-2 rounded-full hover:bg-red-700 transition">2DA INFANTIL</span>
+<span class="bg-red-600 text-white text-sm font-medium px-4 py-2 rounded-full hover:bg-red-700 transition">1RA INFANTIL</span>
+<span class="bg-red-600 text-white text-sm font-medium px-4 py-2 rounded-full hover:bg-red-700 transition">JUVENILES</span>
+<span class="bg-red-600 text-white text-sm font-medium px-4 py-2 rounded-full hover:bg-red-700 transition">1RA ADULTOS HONOR</span>
+<span class="bg-red-600 text-white text-sm font-medium px-4 py-2 rounded-full hover:bg-red-700 transition">- FEMENINO</span>
+<span class="bg-red-600 text-white text-sm font-medium px-4 py-2 rounded-full hover:bg-red-700 transition">-2DA ADULTOS</span>
+<span class="bg-red-600 text-white text-sm font-medium px-4 py-2 rounded-full hover:bg-red-700 transition">- SENIORS</span>
+<span class="bg-red-600 text-white text-sm font-medium px-4 py-2 rounded-full hover:bg-red-700 transition">- SUPER SENIORS</span>
+</div>
+</section>
+</main>
+<footer class="text-center mt-12 py-4 border-t border-red-700">
+<p class="text-sm text-red-300">© 2024 ANFA Villarrica. Todos los derechos reservados.</p>
+</footer>
+</div>
+</body></html>

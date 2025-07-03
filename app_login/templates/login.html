@@ -1,0 +1,58 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Iniciar sesión</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="" />
+    <link
+      rel="stylesheet"
+      as="style"
+      onload="this.rel='stylesheet'"
+      href="https://fonts.googleapis.com/css2?display=swap&amp;family=Inter%3Awght%40400%3B500%3B700%3B900&amp;family=Noto+Sans%3Awght%40400%3B500%3B700%3B900"
+    />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <style>
+      body {
+        background: linear-gradient(135deg, #f8f9fc 0%, #ececec 100%);
+      }
+    </style>
+  </head>
+  <body class="flex flex-col min-h-screen" style='font-family: Inter, "Noto Sans", sans-serif;'>
+    <header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-b-[#e7ebf3] px-4 py-3 md:px-10 bg-white shadow-sm">
+      <div class="flex items-center gap-4 text-[#0e121b]">
+        <!-- Logo eliminado del header -->
+      </div>
+    </header>
+    <div class="flex flex-col items-center justify-center flex-1 px-4">
+      <div class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md border border-[#d1d5db]">
+        <!-- Logo centrado y grande dentro del recuadro del formulario -->
+        <img src="{% static 'img/logo-anfa-villarrica.png' %}" alt="Logo ANFA Villarrica" loading="lazy" class="h-28 md:h-36 drop-shadow-lg mx-auto mb-6 mt-2">
+        <h1 class="text-2xl font-extrabold mb-6 text-center text-[#b91c1c]">Iniciar sesión</h1>
+        <form method="post" action="{% url 'login' %}">
+          {% csrf_token %}
+          <div class="mb-5">
+            <label for="username" class="block text-sm font-semibold text-[#222] mb-1">Usuario</label>
+            <input type="text" name="username" id="username" class="mt-1 block w-full rounded-lg border border-[#b91c1c] bg-[#f9fafb] shadow-sm focus:border-[#b91c1c] focus:ring-[#b91c1c] sm:text-sm px-3 py-2 transition text-[#222]" autocomplete="username">
+          </div>
+          <div class="mb-6">
+            <label for="password" class="block text-sm font-semibold text-[#222] mb-1">Contraseña</label>
+            <input type="password" name="password" id="password" class="mt-1 block w-full rounded-lg border border-[#b91c1c] bg-[#f9fafb] shadow-sm focus:border-[#b91c1c] focus:ring-[#b91c1c] sm:text-sm px-3 py-2 transition text-[#222]" autocomplete="current-password">
+          </div>
+          <div class="flex justify-center">
+            <button type="submit" class="bg-[#b91c1c] hover:bg-[#991b1b] text-white font-semibold px-6 py-2 rounded-lg shadow transition">Iniciar sesión</button>
+          </div>
+        </form>
+        {% if error %}
+        <p class="mt-4 text-[#b91c1c] text-sm text-center">{{ error }}</p>
+        {% endif %}
+      </div>
+    </div>
+  </body>
+</html>
+
+
+
+
+
