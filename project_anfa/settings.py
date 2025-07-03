@@ -23,19 +23,23 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-bd!q_oz_0pu)h#x&f=bhb@@d+1$1d&2=h83&m2s##9%2r*re#&'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+
 
 import os
 
-DEBUG = os.environ.get('DJANGO_DEBUG', 'False') == 'True'
+DEBUG = os.environ.get('DJANGO_DEBUG', 'False') == 'True' # Esto es una buena práctica para controlar DEBUG
 
 ALLOWED_HOSTS = []
 if not DEBUG:
-    ALLOWED_HOSTS = [os.environ.get('anfavillarrica-production.up.railway.app')]
-    # Si tienes subdominios o dominios personalizados, añádelos aquí también
-    # ALLOWED_HOSTS.append('your-custom-domain.com')
-    # ALLOWED_HOSTS.append('www.your-custom-domain.com')
+    # Asegúrate de que esta línea esté presente y correcta
+    RAILWAY_DOMAIN = os.environ.get('RAILWAY_PUBLIC_DOMAIN')
+    if RAILWAY_DOMAIN:
+        ALLOWED_HOSTS.append(RAILWAY_DOMAIN)
+    # Si planeas añadir dominios personalizados en el futuro, los añadirías aquí:
+    # ALLOWED_HOSTS.append('tudominio.com')
+    # ALLOWED_HOSTS.append('www.tudominio.com')
 else:
+    # Para desarrollo local
     ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
 
