@@ -8,3 +8,5 @@ cmd = "gunicorn project_anfa.wsgi:application --bind 0.0.0.0:$PORT"
 # [phases.setup]
 # commands = ["pip install -r requirements.txt"]
 # (aunque Nixpacks suele detectar y ejecutar la instalación automáticamente)
+
+commands = ["python manage.py migrate --noinput"]
