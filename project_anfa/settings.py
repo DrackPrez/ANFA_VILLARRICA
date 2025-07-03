@@ -38,7 +38,7 @@ if not DEBUG:
     # ALLOWED_HOSTS.append('tudominio.com')
     # CSRF_TRUSTED_ORIGINS.append('https://tudominio.com')
 else:
-    ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+    ALLOWED_HOSTS = ['127.0.0.1', 'localhost','anfavillarrica-production.up.railway.app']
     CSRF_TRUSTED_ORIGINS = ['http://127.0.0.1', 'http://localhost']
 
 
