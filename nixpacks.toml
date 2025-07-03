@@ -1,10 +1,10 @@
 # nixpacks.toml
 
-# Especifica el comando de inicio para Django con Gunicorn
-[start]
-cmd = "gunicorn project_anfa.wsgi:application --bind 0.0.0.0:$PORT"
-
+[phases.setup]
 commands = [
   "python manage.py makemigrations --noinput",
   "python manage.py migrate --noinput"
 ]
+
+[start]
+cmd = "gunicorn project_anfa.wsgi:application --bind 0.0.0.0:$PORT"
