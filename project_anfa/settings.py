@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -25,22 +26,20 @@ SECRET_KEY = 'django-insecure-bd!q_oz_0pu)h#x&f=bhb@@d+1$1d&2=h83&m2s##9%2r*re#&
 # SECURITY WARNING: don't run with debug turned on in production!
 
 
-import os
-
-DEBUG = os.environ.get('DJANGO_DEBUG', 'False') == 'True' # Esto es una buena práctica para controlar DEBUG
+DEBUG = True # Esto es una buena práctica para controlar DEBUG
 
 ALLOWED_HOSTS = []
+CSRF_TRUSTED_ORIGINS = []
 if not DEBUG:
-    # Asegúrate de que esta línea esté presente y correcta
     RAILWAY_DOMAIN = os.environ.get('RAILWAY_PUBLIC_DOMAIN')
     if RAILWAY_DOMAIN:
         ALLOWED_HOSTS.append(RAILWAY_DOMAIN)
-    # Si planeas añadir dominios personalizados en el futuro, los añadirías aquí:
+        CSRF_TRUSTED_ORIGINS.append(f"https://{RAILWAY_DOMAIN}")
     # ALLOWED_HOSTS.append('tudominio.com')
-    # ALLOWED_HOSTS.append('www.tudominio.com')
+    # CSRF_TRUSTED_ORIGINS.append('https://tudominio.com')
 else:
-    # Para desarrollo local
     ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+    CSRF_TRUSTED_ORIGINS = ['http://127.0.0.1', 'http://localhost']
 
 
 # Application definition
@@ -135,6 +134,9 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+# WhiteNoise para servir archivos estáticos en producción
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
