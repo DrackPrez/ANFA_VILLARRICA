@@ -85,15 +85,25 @@ WSGI_APPLICATION = 'project_anfa.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-DATABASES = {
-    'default': dj_database_url.config(
-        default=os.environ.get('PUBLIC_DATABASE_URL') or \
-                os.environ.get('DATABASE_URL') or \
-                f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
-        conn_max_age=600,
-        ssl_require=True
-    )
-}
+db_url = os.environ.get('PUBLIC_DATABASE_URL') or \
+         os.environ.get('DATABASE_URL') or \
+         f"sqlite:///{BASE_DIR / 'db.sqlite3'}"
+
+if db_url.startswith('sqlite'):
+    DATABASES = {
+        'default': dj_database_url.config(
+            default=db_url,
+            conn_max_age=600
+        )
+    }
+else:
+    DATABASES = {
+        'default': dj_database_url.config(
+            default=db_url,
+            conn_max_age=600,
+            ssl_require=True
+        )
+    }
 
 
 # Password validation

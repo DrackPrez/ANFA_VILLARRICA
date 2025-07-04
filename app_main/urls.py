@@ -10,5 +10,6 @@ urlpatterns = [
     path('clubes/edit/<int:club_id>/', views.clubes_edit, name='clubes_edit'),
     path('clubes/delete/<int:club_id>/', views.clubes_delete, name='clubes_delete'),
     path('encargados_clubes/<int:club_id>/', views.encargado_edit, name='encargado_edit'),
+    path('serie_honor/', views.serie_honor, name='serie_honor'),
 ]
 
