@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Serie Segunda Adultos</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
+    <style>
+        .modal-bg { display: none; position: fixed; z-index: 10; left: 0; top: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; }
+        .modal-bg.active { display: flex; }
+        .modal-content { background: #fff; color: #222; padding: 24px; border-radius: 8px; min-width: 320px; max-width: 90vw; }
+        .modal-content label { display: block; margin-top: 8px; }
+        .modal-content input, .modal-content select { width: 100%; }
+        .modal-actions { margin-top: 16px; text-align: right; }
+    </style>
+    <script>
+        function openModal(jornadaId) {
+            document.getElementById('addModalBg').classList.add('active');
+            if (jornadaId) {
+                document.getElementById('modal_jornada').value = jornadaId;
+            }
+        }
+        function closeModal() {
+            document.getElementById('addModalBg').classList.remove('active');
+        }
+        function openEditModal(id, equipoLocal, equipoVisita, horario, fecha, cancha, turno, libre) {
+            document.getElementById('editModalBg').classList.add('active');
+            document.getElementById('edit_partido_id').value = id;
+            document.getElementById('edit_equipo_local').value = equipoLocal;
+            document.getElementById('edit_equipo_visita').value = equipoVisita;
+            document.getElementById('edit_horario').value = horario;
+            document.getElementById('edit_fecha').value = fecha;
+            document.getElementById('edit_cancha').value = cancha;
+            document.getElementById('edit_turno').value = turno;
+            document.getElementById('edit_libre').value = libre;
+        }
+        function closeEditModal() {
+            document.getElementById('editModalBg').classList.remove('active');
+        }
+    </script>
+</head>
+<body class="bg-gradient-to-br from-gray-900 to-blue-900 min-h-screen text-gray-100"> {# Changed gradient to blue for distinction #}
+    <div class="container mx-auto p-4 bg-gray-900 bg-opacity-90 rounded-xl shadow-lg mt-6">
+        <div class="flex items-center mb-4">
+            <a href="{% url 'menu' %}" class="bg-gray-800 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded shadow transition flex items-center">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+                </svg>
+                Volver al menú
+            </a>
+        </div>
+        <h1 class="text-3xl font-extrabold text-blue-500 mb-6 text-center drop-shadow">Serie Segunda Adultos</h1> {# Changed text color and title #}
+        <h2 class="text-2xl font-bold text-center text-yellow-400 mb-4">Tabla General Serie Segunda Adultos</h2> {# Changed title #}
+        <div class="w-full mb-8">
+            <div class="overflow-x-auto">
+                <table class="min-w-full bg-gray-800 text-white rounded">
+                    <thead>
+                        <tr>
+                            <th class="px-2 py-1">Pos</th>
+                            <th class="px-2 py-1">Equipo</th>
+                            <th class="px-2 py-1">PJ</th>
+                            <th class="px-2 py-1">PG</th>
+                            <th class="px-2 py-1">PE</th>
+                            <th class="px-2 py-1">PP</th>
+                            <th class="px-2 py-1">GF</th>
+                            <th class="px-2 py-1">GC</th>
+                            <th class="px-2 py-1">DG</th>
+                            <th class="px-2 py-1">Pts</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in tablero_general %}
+                        <tr class="{% cycle 'bg-gray-700' 'bg-gray-800' %}">
+                            <td class="px-2 py-1 text-center">{{ forloop.counter }}</td>
+                            <td class="px-2 py-1">{{ row.equipo }}</td>
+                            <td class="px-2 py-1 text-center">{{ row.PJ }}</td>
+                            <td class="px-2 py-1 text-center">{{ row.PG }}</td>
+                            <td class="px-2 py-1 text-center">{{ row.PE }}</td>
+                            <td class="px-2 py-1 text-center">{{ row.PP }}</td>
+                            <td class="px-2 py-1 text-center">{{ row.GF }}</td>
+                            <td class="px-2 py-1 text-center">{{ row.GC }}</td>
+                            <td class="px-2 py-1 text-center">{{ row.DG }}</td>
+                            <td class="px-2 py-1 text-center font-bold">{{ row.Pts }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <form method="post" class="mb-6 flex justify-center">
+            {% csrf_token %}
+            <button type="submit" name="add_fase" value="1" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded shadow transition">Añadir Fase</button> {# Changed button color #}
+        </form>
+        {% for fase in fases %}
+            <div class="bg-blue-100 text-blue-800 font-bold rounded px-4 py-2 flex flex-col items-center justify-center mb-2 shadow"> {# Changed background and text color #}
+                <span class="text-lg text-center w-full">{{ fase.nombre }}</span>
+                <div class="flex items-center justify-center mt-2">
+                    <form method="post" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" name="delete_fase" value="{{ fase.id }}" class="ml-2 bg-blue-600 hover:bg-blue-700 text-white rounded px-2 py-1 text-xs" onclick="return confirm('¿Eliminar esta fase y todas sus jornadas y partidos?')"> {# Changed button color #}
+                            Eliminar Fase
+                        </button>
+                    </form>
+                </div>
+            </div>
+            <div class="ml-4 mb-6">
+                <form method="post" class="mb-2 flex items-center gap-2 justify-center">
+                    {% csrf_token %}
+                    <input type="hidden" name="fase_id" value="{{ fase.id }}">
+                    <button type="submit" name="add_jornada" value="1" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-1 px-4 rounded shadow transition">Añadir Jornada</button> {# Changed button color #}
+                </form>
+                {% for jornada in fase.jornadas.all %}
+                    <div class="bg-indigo-100 text-indigo-800 font-semibold rounded px-3 py-1 flex flex-col items-center justify-center mb-1 shadow"> {# Changed background and text color #}
+                        <span class="text-base text-center w-full">{{ jornada.nombre }}</span>
+                        <div class="flex items-center justify-center mt-2">
+                            <form method="post" style="display:inline;">
+                                {% csrf_token %}
+                                <button type="submit" name="delete_jornada" value="{{ jornada.id }}" class="ml-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded px-2 py-1 text-xs" onclick="return confirm('¿Eliminar esta jornada y todos sus partidos?')"> {# Changed button color #}
+                                    Eliminar Jornada
+                                </button>
+                            </form>
+                            <button type="button" onclick="openModal('{{ jornada.id }}')" class="ml-2 bg-green-600 hover:bg-green-700 text-white rounded px-2 py-1 text-xs">Añadir Partido</button>
+                        </div>
+                    </div>
+                    <form method="post" class="mb-4">
+                        {% csrf_token %}
+                        <div class="overflow-x-auto">
+                        <table class="min-w-full text-xs md:text-sm bg-gray-800 rounded shadow">
+                            <thead>
+                                <tr>
+                                    <th class="px-2 py-1 bg-indigo-900">Local</th> {# Changed bg color #}
+                                    <th class="px-2 py-1 bg-indigo-900">EP_LOCAL</th> {# Changed bg color #}
+                                    <th class="px-2 py-1 bg-indigo-900">G_Local</th> {# Changed bg color #}
+                                    <th class="px-2 py-1 bg-red-900">VS</th>
+                                    <th class="px-2 py-1 bg-blue-900">G_Visita</th> {# Changed bg color #}
+                                    <th class="px-2 py-1 bg-blue-900">EP_VISITA</th> {# Changed bg color #}
+                                    <th class="px-2 py-1 bg-blue-900">Visita</th> {# Changed bg color #}
+                                    <th class="px-2 py-1 bg-gray-900">Hora</th>
+                                    <th class="px-2 py-1 bg-gray-900">Fecha</th>
+                                    <th class="px-2 py-1 bg-gray-900">Cancha</th>
+                                    <th class="px-2 py-1 bg-gray-900">Turno</th>
+                                    <th class="px-2 py-1 bg-gray-900">Libre</th>
+                                    <th class="px-2 py-1 bg-gray-900">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for sh in jornada.partidos_segunda_adultos.all %} {# IMPORTANT CHANGE: partidos_segunda_adultos instead of partidos or partidos_femenino #}
+                                <tr>
+                                    <input type="hidden" name="id_{{ sh.id }}" value="{{ sh.id }}">
+                                    <td class="text-center text-white bg-indigo-800 bg-opacity-50">{{ sh.equipo_local.club }}</td> {# Changed bg color #}
+                                    <td class="text-center text-white bg-indigo-800 bg-opacity-50">{{ sh.estado_partido_local }}</td> {# Changed bg color #}
+                                    <td class="bg-indigo-800 bg-opacity-50"> {# Changed bg color #}
+                                        <input type="number" name="goles_local_{{ sh.id }}" value="{{ sh.goles_local }}" min="0" class="bg-gray-900 text-white rounded w-16 px-1">
+                                    </td>
+                                    <td class="text-center text-white bg-red-800 bg-opacity-50 font-bold">VS</td>
+                                    <td class="bg-blue-800 bg-opacity-50"> {# Changed bg color #}
+                                        <input type="number" name="goles_visita_{{ sh.id }}" value="{{ sh.goles_visita }}" min="0" class="bg-gray-900 text-white rounded w-16 px-1">
+                                    </td>
+                                    <td class="text-center text-white bg-blue-800 bg-opacity-50">{{ sh.estado_partido_visita }}</td> {# Changed bg color #}
+                                    <td class="text-center text-white bg-blue-800 bg-opacity-50">{{ sh.equipo_visita.club }}</td> {# Changed bg color #}
+                                    <td class="text-center text-white bg-gray-800 bg-opacity-50">{{ sh.horario }}</td>
+                                    <td class="text-center text-white bg-gray-800 bg-opacity-50">{{ sh.fecha|date:'Y-m-d' }}</td>
+                                    <td class="text-center text-white bg-gray-800 bg-opacity-50">{{ sh.cancha }}</td>
+                                    <td class="text-center text-white bg-gray-800 bg-opacity-50">{{ sh.turno }}</td>
+                                    <td class="text-center text-white bg-gray-800 bg-opacity-50">{{ sh.libre }}</td>
+                                    <td class="bg-gray-800 bg-opacity-50">
+                                        <button type="submit" name="delete_row" value="{{ sh.id }}" class="bg-red-600 hover:bg-red-700 text-white rounded px-2 py-1 text-xs" onclick="return confirm('¿Eliminar este partido?')">Eliminar</button>
+                                        <button type="button" onclick="openEditModal('{{ sh.id }}', '{{ sh.equipo_local.id }}', '{{ sh.equipo_visita.id }}', '{{ sh.horario|time:'H:i' }}', '{{ sh.fecha|date:'Y-m-d' }}', '{{ sh.cancha }}', '{{ sh.turno }}', '{{ sh.libre }}')" class="bg-yellow-600 hover:bg-yellow-700 text-white rounded px-2 py-1 text-xs ml-1">Editar</button>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr><td colspan="12" class="text-center text-gray-400">No hay partidos en esta jornada.</td></tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        </div>
+                        <button type="submit" class="mt-2 bg-green-600 hover:bg-green-700 text-white font-bold py-1 px-4 rounded shadow transition">Guardar Cambios</button>
+                    </form>
+                {% empty %}
+                    <div class="text-gray-400 mb-4 text-center">No hay jornadas en esta fase.</div>
+                {% endfor %}
+            </div>
+        {% empty %}
+            <div class="text-gray-400 text-center">No hay fases creadas.</div>
+        {% endfor %}
+
+        <div id="addModalBg" class="modal-bg">
+            <div class="modal-content">
+                <form method="post" onsubmit="closeModal()">
+                    {% csrf_token %}
+                    <input type="hidden" name="add_row_modal" value="1">
+                    <input type="hidden" name="modal_jornada" id="modal_jornada" value="">
+                    <label class="font-semibold">Equipo Local
+                        <select name="modal_equipo_local" required>
+                            {% for club in clubes %}
+                                <option value="{{ club.id }}">{{ club.club }}</option>
+                            {% endfor %}
+                        </select>
+                    </label>
+                    <label class="font-semibold">Equipo Visita
+                        <select name="modal_equipo_visita" required>
+                            {% for club in clubes %}
+                                <option value="{{ club.id }}">{{ club.club }}</option>
+                            {% endfor %}
+                        </select>
+                    </label>
+                    <label class="font-semibold">Horario
+                        <input type="time" name="modal_horario">
+                    </label>
+                    <label class="font-semibold">Fecha
+                        <input type="date" name="modal_fecha">
+                    </label>
+                    <label class="font-semibold">Cancha
+                        <input type="text" name="modal_cancha">
+                    </label>
+                    <label class="font-semibold">Turno
+                        <input type="text" name="modal_turno">
+                    </label>
+                    <label class="font-semibold">Libre
+                        <input type="text" name="modal_libre">
+                    </label>
+                    <div class="modal-actions">
+                        <button type="button" onclick="closeModal()" class="bg-gray-400 hover:bg-gray-500 text-white rounded px-4 py-2 mr-2">Cancelar</button>
+                        <button type="submit" class="bg-green-600 hover:bg-green-700 text-white rounded px-4 py-2">Añadir</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div id="editModalBg" class="modal-bg">
+            <div class="modal-content">
+                <form method="post" onsubmit="closeEditModal()">
+                    {% csrf_token %}
+                    <input type="hidden" name="edit_row_modal" value="1">
+                    <input type="hidden" name="edit_partido_id" id="edit_partido_id">
+                    <label class="font-semibold">Equipo Local
+                        <select name="edit_equipo_local" id="edit_equipo_local" required>
+                            {% for club in clubes %}
+                                <option value="{{ club.id }}">{{ club.club }}</option>
+                            {% endfor %}
+                        </select>
+                    </label>
+                    <label class="font-semibold">Equipo Visita
+                        <select name="edit_equipo_visita" id="edit_equipo_visita" required>
+                            {% for club in clubes %}
+                                <option value="{{ club.id }}">{{ club.club }}</option>
+                            {% endfor %}
+                        </select>
+                    </label>
+                    <label class="font-semibold">Horario
+                        <input type="time" name="edit_horario" id="edit_horario" required>
+                    </label>
+                    <label class="font-semibold">Fecha
+                        <input type="date" name="edit_fecha" id="edit_fecha" required>
+                    </label>
+                    <label class="font-semibold">Cancha
+                        <input type="text" name="edit_cancha" id="edit_cancha" required>
+                    </label>
+                    <label class="font-semibold">Turno
+                        <input type="text" name="edit_turno" id="edit_turno">
+                    </label>
+                    <label class="font-semibold">Libre
+                        <input type="text" name="edit_libre" id="edit_libre">
+                    </label>
+                    <div class="modal-actions">
+                        <button type="button" onclick="closeEditModal()" class="bg-gray-400 hover:bg-gray-500 text-white rounded px-4 py-2 mr-2">Cancelar</button>
+                        <button type="submit" class="bg-yellow-600 hover:bg-yellow-700 text-white rounded px-4 py-2">Guardar Cambios</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
