@@ -68,7 +68,9 @@
             <tbody>
                 {% if proximos_partidos %}
                     {% for partido in proximos_partidos %}
-                    <tr class="border-b border-gray-800">
+                    <tr class="border-b border-gray-800 cursor-pointer hover:bg-yellow-900 transition"
+                        data-partido-id="{{ partido.id }}"
+                        onclick="irAPartido('{{ partido.serie_url }}', '{{ partido.jornada_id }}', '{{ partido.id }}')">
                         <td class="px-2 py-2 text-center">{{ partido.fecha }}</td>
                         <td class="px-2 py-2 text-center">{{ partido.hora }}</td>
                         <td class="px-2 py-2 text-center">{{ partido.serie }}</td>
@@ -353,4 +355,10 @@
 <p class="text-sm text-red-300">© 2025 ANFA Villarrica. Todos los derechos reservados.</p>
 </footer>
 </div>
+<script>
+function irAPartido(serieUrl, jornadaId, partidoId) {
+    // Redirige a la url de la serie con hash de jornada y partido
+    window.location.href = serieUrl + '#jornada-' + jornadaId + '-partido-' + partidoId;
+}
+</script>
 </body></html>

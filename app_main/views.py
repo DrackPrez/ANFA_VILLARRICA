@@ -8,35 +8,39 @@ from .models import SerieTerceraInfantil, Tablero_SerieTerceraInfantil
 from django.views.decorators.csrf import csrf_exempt
 from collections import defaultdict
 from datetime import date
+from django.urls import reverse
 
 def menu(request):
     hoy = date.today()
     proximos_partidos = []
 
-    # (modelo, nombre legible de la serie)
+    # (modelo, nombre legible de la serie, nombre de la url de la serie)
     series = [
-        (SerieHonor, "1ra Adultos Honor"),
-        (SerieSegundaAdultos, "2da Adultos"),
-        (SerieSeniors, "Seniors"),
-        (SerieSuperSeniors, "Super Seniors"),
-        (SerieJuvenil, "Juvenil"),
-        (SeriePrimeraInfantil, "Primera Infantil"),
-        (SerieSegundaInfantil, "Segunda Infantil"),
-        (SerieTerceraInfantil, "Tercera Infantil"),
-        (SerieFemenino, "Femenino"),
+        (SerieHonor, "1ra Adultos Honor", 'serie_honor'),
+        (SerieSegundaAdultos, "2da Adultos", 'serie_segunda_adultos'),
+        (SerieSeniors, "Seniors", 'serie_seniors'),
+        (SerieSuperSeniors, "Super Seniors", 'serie_super_seniors'),
+        (SerieJuvenil, "Juvenil", 'serie_juvenil'),
+        (SeriePrimeraInfantil, "Primera Infantil", 'serie_primera_infantil'),
+        (SerieSegundaInfantil, "Segunda Infantil", 'serie_segunda_infantil'),
+        (SerieTerceraInfantil, "Tercera Infantil", 'serie_tercera_infantil'),
+        (SerieFemenino, "Femenino", 'serie_femenino'),
     ]
 
-    for modelo, nombre_serie in series:
+    for modelo, nombre_serie, url_name in series:
         for p in modelo.objects.filter(fecha__gte=hoy).order_by('fecha', 'horario'):
             proximos_partidos.append({
+                'id': p.id,
                 'fecha': p.fecha,
                 'hora': p.horario if hasattr(p, 'horario') else getattr(p, 'hora', None),
                 'serie': nombre_serie,
                 'fase': p.jornada.fase.nombre if p.jornada and p.jornada.fase else '',
                 'jornada': p.jornada.nombre if p.jornada else '',
+                'jornada_id': p.jornada.id if p.jornada else '',
                 'equipo_local': p.equipo_local,
                 'equipo_visita': p.equipo_visita,
                 'cancha': p.cancha,
+                'serie_url': reverse(url_name),
             })
 
     proximos_partidos.sort(key=lambda x: (x['fecha'], x['hora'] or ''))
@@ -1482,4 +1486,3 @@ def serie_tercera_infantil(request):
         'estado_choices': SerieTerceraInfantil.ESTADO_PARTIDO_CHOICES,
         'tablero_general': tablero_general,
     })
-         

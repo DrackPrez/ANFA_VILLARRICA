@@ -144,7 +144,7 @@
                             </thead>
                             <tbody>
                                 {% for sh in jornada.partidos_seniors.all %}
-                                <tr>
+                                <tr id="jornada-{{ jornada.id }}-partido-{{ sh.id }}">
                                     <input type="hidden" name="id_{{ sh.id }}" value="{{ sh.id }}">
                                     <td class="text-center text-white bg-blue-800 bg-opacity-50">{{ sh.equipo_local.club }}</td>
                                     <td class="text-center text-white bg-blue-800 bg-opacity-50">{{ sh.estado_partido_local }}</td>
@@ -279,5 +279,18 @@
             </div>
         </div>
     </div>
+    <script>
+document.addEventListener('DOMContentLoaded', function() {
+    if (window.location.hash) {
+        var row = document.querySelector(window.location.hash);
+        if (row) {
+            row.classList.add('ring-4', 'ring-yellow-400', 'animate-pulse');
+            setTimeout(function() {
+                row.classList.remove('ring-4', 'ring-yellow-400', 'animate-pulse');
+            }, 2500);
+        }
+    }
+});
+</script>
 </body>
 </html>
