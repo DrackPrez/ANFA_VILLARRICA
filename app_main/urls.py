@@ -13,5 +13,6 @@ urlpatterns = [
     path('serie_honor/', views.serie_honor, name='serie_honor'),
     path('serie_femenino/', views.serie_femenino, name='serie_femenino'),
     path('serie_segunda_adultos/', views.serie_segunda_adultos, name='serie_segunda_adultos'),
+    path('serie_seniors/', views.serie_seniors, name='serie_seniors'),
 ]
 
