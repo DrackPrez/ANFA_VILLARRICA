@@ -29,12 +29,16 @@ def menu(request):
 
     for modelo, nombre_serie, url_name in series:
         for p in modelo.objects.filter(fecha__gte=hoy).order_by('fecha', 'horario'):
+            # Acortar la fase a las primeras dos palabras
+            fase_nombre = ''
+            if p.jornada and p.jornada.fase and p.jornada.fase.nombre:
+                fase_nombre = ' '.join(p.jornada.fase.nombre.split()[:2])
             proximos_partidos.append({
                 'id': p.id,
                 'fecha': p.fecha,
                 'hora': p.horario if hasattr(p, 'horario') else getattr(p, 'hora', None),
                 'serie': nombre_serie,
-                'fase': p.jornada.fase.nombre if p.jornada and p.jornada.fase else '',
+                'fase': fase_nombre,
                 'jornada': p.jornada.nombre if p.jornada else '',
                 'jornada_id': p.jornada.id if p.jornada else '',
                 'equipo_local': p.equipo_local,
