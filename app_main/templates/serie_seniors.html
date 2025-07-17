@@ -70,7 +70,21 @@
                     <tbody>
                         {% for row in tablero_general %}
                         <tr class="{% cycle 'bg-gray-700' 'bg-gray-800' %}">
-                            <td class="px-2 py-1 text-center">{{ forloop.counter }}</td>
+                            <td class="px-2 py-1 text-center
+                                {% if forloop.counter == 1 %} border-4 border-yellow-400 rounded-lg font-bold {% endif %}
+                                {% if forloop.counter == 2 %} border-4 border-gray-400 rounded-lg font-bold {% endif %}
+                                {% if forloop.counter == 3 %} border-4 border-yellow-700 rounded-lg font-bold {% endif %}
+                            ">
+                                {% if forloop.counter == 1 %}
+                                    🥇
+                                {% elif forloop.counter == 2 %}
+                                    🥈
+                                {% elif forloop.counter == 3 %}
+                                    🥉
+                                {% else %}
+                                    {{ forloop.counter }}
+                                {% endif %}
+                            </td>
                             <td class="px-2 py-1">{{ row.equipo }}</td>
                             <td class="px-2 py-1 text-center">{{ row.PJ }}</td>
                             <td class="px-2 py-1 text-center">{{ row.PG }}</td>
