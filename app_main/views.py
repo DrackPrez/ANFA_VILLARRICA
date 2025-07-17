@@ -616,7 +616,8 @@ def serie_seniors(request):
                 "PRIMERA", "SEGUNDA", "TERCERA", "CUARTA", "QUINTA",
                 "SEXTA", "SÉPTIMA", "OCTAVA", "NOVENA", "DÉCIMA"
             ]
-            fases = Fase.objects.filter(nombre__icontains="SENIORS").order_by('id')
+            # Solo fases de seniors (no incluir super seniors)
+            fases = Fase.objects.filter(nombre__icontains="SENIORS").exclude(nombre__icontains="SUPER").order_by('id')
             next_num = fases.count() + 1
             if next_num > 10:
                 next_num = 10
@@ -626,6 +627,7 @@ def serie_seniors(request):
                 Fase.objects.create(nombre=nombre_fase)
             return redirect('serie_seniors')
         elif 'delete_fase' in request.POST:
+            # Eliminar solo la fase seleccionada
             Fase.objects.filter(id=request.POST.get('delete_fase')).delete()
             return redirect('serie_seniors')
         elif 'add_jornada' in request.POST:
@@ -718,7 +720,7 @@ def serie_seniors(request):
                 fase = Fase.objects.get(id=fase_id)
                 actualizar_tabla_posiciones_seniors(fase)
             return redirect('serie_seniors')
-    fases = Fase.objects.filter(nombre__icontains="SENIORS").prefetch_related('jornadas__partidos_seniors')
+    fases = Fase.objects.filter(nombre__icontains="SENIORS").exclude(nombre__icontains="SUPER").prefetch_related('jornadas__partidos_seniors')
     clubes = Clubes.objects.all()
     jornadas = Jornada.objects.all()
     tablero_general = calcular_tablero_general_seniors()
@@ -771,6 +773,7 @@ def serie_super_seniors(request):
                 "PRIMERA", "SEGUNDA", "TERCERA", "CUARTA", "QUINTA",
                 "SEXTA", "SÉPTIMA", "OCTAVA", "NOVENA", "DÉCIMA"
             ]
+            # Solo fases de super seniors
             fases = Fase.objects.filter(nombre__icontains="SUPER SENIORS").order_by('id')
             next_num = fases.count() + 1
             if next_num > 10:
@@ -781,6 +784,7 @@ def serie_super_seniors(request):
                 Fase.objects.create(nombre=nombre_fase)
             return redirect('serie_super_seniors')
         elif 'delete_fase' in request.POST:
+            # Eliminar solo la fase seleccionada
             Fase.objects.filter(id=request.POST.get('delete_fase')).delete()
             return redirect('serie_super_seniors')
         elif 'add_jornada' in request.POST:
@@ -1024,6 +1028,7 @@ def serie_segunda_infantil(request):
                         fase_ids_actualizadas.add(sh.jornada.fase_id)
                     except SerieSegundaInfantil.DoesNotExist:
                         continue
+            # Actualizar tabla después de actualizar goles/partidos
             for fase_id in fase_ids_actualizadas:
                 fase = Fase.objects.get(id=fase_id)
                 actualizar_tabla_posiciones_segunda_infantil(fase)
