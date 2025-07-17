@@ -184,17 +184,8 @@ def serie_honor(request):
             return redirect('serie_honor')
         elif 'add_jornada' in request.POST:
             fase_id = request.POST.get('fase_id')
-            # Obtener el último número de jornada global
-            last_jornada = Jornada.objects.order_by('-id').first()
-            next_num = 1
-            if last_jornada and last_jornada.nombre.startswith('Jornada '):
-                try:
-                    next_num = int(last_jornada.nombre.split(' ')[1]) + 1
-                except Exception:
-                    next_num = last_jornada.id + 1
-            else:
-                # Si no hay jornadas previas o el nombre no sigue el formato
-                next_num = last_jornada.id + 1 if last_jornada else 1
+            jornadas = Jornada.objects.filter(fase_id=fase_id).order_by('id')
+            next_num = jornadas.count() + 1
             nombre_jornada = f"Jornada {next_num}"
             Jornada.objects.create(fase_id=fase_id, nombre=nombre_jornada)
             return redirect('serie_honor')
@@ -347,15 +338,8 @@ def serie_femenino(request):
             return redirect('serie_femenino')
         elif 'add_jornada' in request.POST:
             fase_id = request.POST.get('fase_id')
-            last_jornada = Jornada.objects.order_by('-id').first()
-            next_num = 1
-            if last_jornada and last_jornada.nombre.startswith('Jornada '):
-                try:
-                    next_num = int(last_jornada.nombre.split(' ')[1]) + 1
-                except Exception:
-                    next_num = last_jornada.id + 1
-            else:
-                next_num = last_jornada.id + 1 if last_jornada else 1
+            jornadas = Jornada.objects.filter(fase_id=fase_id).order_by('id')
+            next_num = jornadas.count() + 1
             nombre_jornada = f"Jornada {next_num}"
             Jornada.objects.create(fase_id=fase_id, nombre=nombre_jornada)
             return redirect('serie_femenino')
@@ -505,15 +489,8 @@ def serie_segunda_adultos(request):
             return redirect('serie_segunda_adultos')
         elif 'add_jornada' in request.POST:
             fase_id = request.POST.get('fase_id')
-            last_jornada = Jornada.objects.order_by('-id').first()
-            next_num = 1
-            if last_jornada and last_jornada.nombre.startswith('Jornada '):
-                try:
-                    next_num = int(last_jornada.nombre.split(' ')[1]) + 1
-                except Exception:
-                    next_num = last_jornada.id + 1
-            else:
-                next_num = last_jornada.id + 1 if last_jornada else 1
+            jornadas = Jornada.objects.filter(fase_id=fase_id).order_by('id')
+            next_num = jornadas.count() + 1
             nombre_jornada = f"Jornada {next_num}"
             Jornada.objects.create(fase_id=fase_id, nombre=nombre_jornada)
             return redirect('serie_segunda_adultos')
@@ -663,15 +640,8 @@ def serie_seniors(request):
             return redirect('serie_seniors')
         elif 'add_jornada' in request.POST:
             fase_id = request.POST.get('fase_id')
-            last_jornada = Jornada.objects.order_by('-id').first()
-            next_num = 1
-            if last_jornada and last_jornada.nombre.startswith('Jornada '):
-                try:
-                    next_num = int(last_jornada.nombre.split(' ')[1]) + 1
-                except Exception:
-                    next_num = last_jornada.id + 1
-            else:
-                next_num = last_jornada.id + 1 if last_jornada else 1
+            jornadas = Jornada.objects.filter(fase_id=fase_id).order_by('id')
+            next_num = jornadas.count() + 1
             nombre_jornada = f"Jornada {next_num}"
             Jornada.objects.create(fase_id=fase_id, nombre=nombre_jornada)
             return redirect('serie_seniors')
@@ -747,6 +717,7 @@ def serie_seniors(request):
                         fase_ids_actualizadas.add(sh.jornada.fase_id)
                     except SerieSeniors.DoesNotExist:
                         continue
+            # Actualizar tabla después de actualizar goles/partidos
             for fase_id in fase_ids_actualizadas:
                 fase = Fase.objects.get(id=fase_id)
                 actualizar_tabla_posiciones_seniors(fase)
@@ -820,15 +791,8 @@ def serie_super_seniors(request):
             return redirect('serie_super_seniors')
         elif 'add_jornada' in request.POST:
             fase_id = request.POST.get('fase_id')
-            last_jornada = Jornada.objects.order_by('-id').first()
-            next_num = 1
-            if last_jornada and last_jornada.nombre.startswith('Jornada '):
-                try:
-                    next_num = int(last_jornada.nombre.split(' ')[1]) + 1
-                except Exception:
-                    next_num = last_jornada.id + 1
-            else:
-                next_num = last_jornada.id + 1 if last_jornada else 1
+            jornadas = Jornada.objects.filter(fase_id=fase_id).order_by('id')
+            next_num = jornadas.count() + 1
             nombre_jornada = f"Jornada {next_num}"
             Jornada.objects.create(fase_id=fase_id, nombre=nombre_jornada)
             return redirect('serie_super_seniors')
@@ -904,6 +868,7 @@ def serie_super_seniors(request):
                         fase_ids_actualizadas.add(sh.jornada.fase_id)
                     except SerieSuperSeniors.DoesNotExist:
                         continue
+            # Actualizar tabla después de actualizar goles/partidos
             for fase_id in fase_ids_actualizadas:
                 fase = Fase.objects.get(id=fase_id)
                 actualizar_tabla_posiciones_super_seniors(fase)
@@ -975,15 +940,8 @@ def serie_segunda_infantil(request):
             return redirect('serie_segunda_infantil')
         elif 'add_jornada' in request.POST:
             fase_id = request.POST.get('fase_id')
-            last_jornada = Jornada.objects.order_by('-id').first()
-            next_num = 1
-            if last_jornada and last_jornada.nombre.startswith('Jornada '):
-                try:
-                    next_num = int(last_jornada.nombre.split(' ')[1]) + 1
-                except Exception:
-                    next_num = last_jornada.id + 1
-            else:
-                next_num = last_jornada.id + 1 if last_jornada else 1
+            jornadas = Jornada.objects.filter(fase_id=fase_id).order_by('id')
+            next_num = jornadas.count() + 1
             nombre_jornada = f"Jornada {next_num}"
             Jornada.objects.create(fase_id=fase_id, nombre=nombre_jornada)
             return redirect('serie_segunda_infantil')
@@ -1131,15 +1089,8 @@ def serie_juvenil(request):
             return redirect('serie_juvenil')
         elif 'add_jornada' in request.POST:
             fase_id = request.POST.get('fase_id')
-            last_jornada = Jornada.objects.order_by('-id').first()
-            next_num = 1
-            if last_jornada and last_jornada.nombre.startswith('Jornada '):
-                try:
-                    next_num = int(last_jornada.nombre.split(' ')[1]) + 1
-                except Exception:
-                    next_num = last_jornada.id + 1
-            else:
-                next_num = last_jornada.id + 1 if last_jornada else 1
+            jornadas = Jornada.objects.filter(fase_id=fase_id).order_by('id')
+            next_num = jornadas.count() + 1
             nombre_jornada = f"Jornada {next_num}"
             Jornada.objects.create(fase_id=fase_id, nombre=nombre_jornada)
             return redirect('serie_juvenil')
@@ -1289,15 +1240,8 @@ def serie_primera_infantil(request):
             return redirect('serie_primera_infantil')
         elif 'add_jornada' in request.POST:
             fase_id = request.POST.get('fase_id')
-            last_jornada = Jornada.objects.order_by('-id').first()
-            next_num = 1
-            if last_jornada and last_jornada.nombre.startswith('Jornada '):
-                try:
-                    next_num = int(last_jornada.nombre.split(' ')[1]) + 1
-                except Exception:
-                    next_num = last_jornada.id + 1
-            else:
-                next_num = last_jornada.id + 1 if last_jornada else 1
+            jornadas = Jornada.objects.filter(fase_id=fase_id).order_by('id')
+            next_num = jornadas.count() + 1
             nombre_jornada = f"Jornada {next_num}"
             Jornada.objects.create(fase_id=fase_id, nombre=nombre_jornada)
             return redirect('serie_primera_infantil')
@@ -1445,15 +1389,8 @@ def serie_tercera_infantil(request):
             return redirect('serie_tercera_infantil')
         elif 'add_jornada' in request.POST:
             fase_id = request.POST.get('fase_id')
-            last_jornada = Jornada.objects.order_by('-id').first()
-            next_num = 1
-            if last_jornada and last_jornada.nombre.startswith('Jornada '):
-                try:
-                    next_num = int(last_jornada.nombre.split(' ')[1]) + 1
-                except Exception:
-                    next_num = last_jornada.id + 1
-            else:
-                next_num = last_jornada.id + 1 if last_jornada else 1
+            jornadas = Jornada.objects.filter(fase_id=fase_id).order_by('id')
+            next_num = jornadas.count() + 1
             nombre_jornada = f"Jornada {next_num}"
             Jornada.objects.create(fase_id=fase_id, nombre=nombre_jornada)
             return redirect('serie_tercera_infantil')
@@ -1545,4 +1482,4 @@ def serie_tercera_infantil(request):
         'estado_choices': SerieTerceraInfantil.ESTADO_PARTIDO_CHOICES,
         'tablero_general': tablero_general,
     })
-
+         
