@@ -11,6 +11,31 @@
         .modal-content label { display: block; margin-top: 8px; }
         .modal-content input, .modal-content select { width: 100%; }
         .modal-actions { margin-top: 16px; text-align: right; }
+        .fase-page { display: none; }
+        .fase-page.active { display: block; }
+        .fase-pagination-btn {
+            @apply bg-red-600 hover:bg-red-700 text-white font-bold rounded-lg shadow transition;
+            width: 2.5rem;
+            height: 2.5rem;
+            min-width: 2.5rem;
+            min-height: 2.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 0.25rem;
+            font-size: 1.25rem;
+            border: 2px solid transparent;
+            box-sizing: border-box;
+        }
+        .fase-pagination-btn.active {
+            @apply bg-yellow-400 text-red-900 border-yellow-500;
+            border-width: 2px;
+            box-shadow: 0 0 0 2px #fbbf24;
+        }
+        .fase-pagination-btn:focus {
+            outline: none;
+            border-color: #fbbf24;
+        }
     </style>
     <script>
         function openModal(jornadaId) {
@@ -104,98 +129,112 @@
             {% csrf_token %}
             <button type="submit" name="add_fase" value="1" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-6 rounded shadow transition">Añadir Fase</button>
         </form>
+        {% if fases %}
+        <div class="flex justify-center mb-4">
+            <button type="button" id="fase-prev-btn" class="fase-pagination-btn" aria-label="Anterior">&laquo;</button>
+            {% for fase in fases %}
+                <button type="button" class="fase-pagination-btn" data-fase-index="{{ forloop.counter0 }}">{{ forloop.counter }}</button>
+            {% endfor %}
+            <button type="button" id="fase-next-btn" class="fase-pagination-btn" aria-label="Siguiente">&raquo;</button>
+        </div>
+        {% endif %}
+
+        <div id="fases-container">
         {% for fase in fases %}
-            <div class="bg-red-100 text-red-800 font-bold rounded px-4 py-2 flex flex-col items-center justify-center mb-2 shadow">
-                <span class="text-lg text-center w-full">{{ fase.nombre }}</span>
-                <div class="flex items-center justify-center mt-2">
-                    <form method="post" style="display:inline;">
-                        {% csrf_token %}
-                        <button type="submit" name="delete_fase" value="{{ fase.id }}" class="ml-2 bg-red-600 hover:bg-red-700 text-white rounded px-2 py-1 text-xs" onclick="return confirm('¿Eliminar esta fase y todas sus jornadas y partidos?')">
-                            Eliminar Fase
-                        </button>
-                    </form>
-                </div>
-            </div>
-            <div class="ml-4 mb-6">
-                <form method="post" class="mb-2 flex items-center gap-2 justify-center">
-                    {% csrf_token %}
-                    <input type="hidden" name="fase_id" value="{{ fase.id }}">
-                    <button type="submit" name="add_jornada" value="1" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-1 px-4 rounded shadow transition">Añadir Jornada</button>
-                </form>
-                {% for jornada in fase.jornadas.all %}
-                    <div class="bg-blue-100 text-blue-800 font-semibold rounded px-3 py-1 flex flex-col items-center justify-center mb-1 shadow">
-                        <span class="text-base text-center w-full">{{ jornada.nombre }}</span>
-                        <div class="flex items-center justify-center mt-2">
-                            <form method="post" style="display:inline;">
-                                {% csrf_token %}
-                                <button type="submit" name="delete_jornada" value="{{ jornada.id }}" class="ml-2 bg-blue-600 hover:bg-blue-700 text-white rounded px-2 py-1 text-xs" onclick="return confirm('¿Eliminar esta jornada y todos sus partidos?')">
-                                    Eliminar Jornada
-                                </button>
-                            </form>
-                            <button type="button" onclick="openModal('{{ jornada.id }}')" class="ml-2 bg-green-600 hover:bg-green-700 text-white rounded px-2 py-1 text-xs">Añadir Partido</button>
-                        </div>
+            <div class="fase-page{% if forloop.first %} active{% endif %}" data-fase-index="{{ forloop.counter0 }}">
+                <div class="bg-red-100 text-red-800 font-bold rounded px-4 py-2 flex flex-col items-center justify-center mb-2 shadow">
+                    <span class="text-lg text-center w-full">{{ fase.nombre }}</span>
+                    <div class="flex items-center justify-center mt-2">
+                        <form method="post" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" name="delete_fase" value="{{ fase.id }}" class="ml-2 bg-red-600 hover:bg-red-700 text-white rounded px-2 py-1 text-xs" onclick="return confirm('¿Eliminar esta fase y todas sus jornadas y partidos?')">
+                                Eliminar Fase
+                            </button>
+                        </form>
                     </div>
-                    <form method="post" class="mb-4">
+                </div>
+                <div class="ml-4 mb-6">
+                    <form method="post" class="mb-2 flex items-center gap-2 justify-center">
                         {% csrf_token %}
-                        <div class="overflow-x-auto">
-                        <table class="min-w-full text-xs md:text-sm bg-gray-800 rounded shadow">
-                            <thead>
-                                <tr>
-                                    <th class="px-2 py-1 bg-blue-900">Local</th>
-                                    <th class="px-2 py-1 bg-blue-900">EP_LOCAL</th>
-                                    <th class="px-2 py-1 bg-blue-900">G_Local</th>
-                                    <th class="px-2 py-1 bg-purple-900">VS</th>
-                                    <th class="px-2 py-1 bg-red-900">G_Visita</th>
-                                    <th class="px-2 py-1 bg-red-900">EP_VISITA</th>
-                                    <th class="px-2 py-1 bg-red-900">Visita</th>
-                                    <th class="px-2 py-1 bg-gray-900">Hora</th>
-                                    <th class="px-2 py-1 bg-gray-900">Fecha</th>
-                                    <th class="px-2 py-1 bg-gray-900">Cancha</th>
-                                    <th class="px-2 py-1 bg-gray-900">Turno</th>
-                                    <th class="px-2 py-1 bg-gray-900">Libre</th>
-                                    <th class="px-2 py-1 bg-gray-900">Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for sh in jornada.partidos_seniors.all %}
-                                <tr id="jornada-{{ jornada.id }}-partido-{{ sh.id }}">
-                                    <input type="hidden" name="id_{{ sh.id }}" value="{{ sh.id }}">
-                                    <td class="text-center text-white bg-blue-800 bg-opacity-50">{{ sh.equipo_local.club }}</td>
-                                    <td class="text-center text-white bg-blue-800 bg-opacity-50">{{ sh.estado_partido_local }}</td>
-                                    <td class="bg-blue-800 bg-opacity-50">
-                                        <input type="number" name="goles_local_{{ sh.id }}" value="{{ sh.goles_local }}" min="0" class="bg-gray-900 text-white rounded w-16 px-1">
-                                    </td>
-                                    <td class="text-center text-white bg-purple-800 bg-opacity-50 font-bold">VS</td>
-                                    <td class="bg-red-800 bg-opacity-50">
-                                        <input type="number" name="goles_visita_{{ sh.id }}" value="{{ sh.goles_visita }}" min="0" class="bg-gray-900 text-white rounded w-16 px-1">
-                                    </td>
-                                    <td class="text-center text-white bg-red-800 bg-opacity-50">{{ sh.estado_partido_visita }}</td>
-                                    <td class="text-center text-white bg-red-800 bg-opacity-50">{{ sh.equipo_visita.club }}</td>
-                                    <td class="text-center text-white bg-gray-800 bg-opacity-50">{{ sh.horario }}</td>
-                                    <td class="text-center text-white bg-gray-800 bg-opacity-50">{{ sh.fecha|date:'Y-m-d' }}</td>
-                                    <td class="text-center text-white bg-gray-800 bg-opacity-50">{{ sh.cancha }}</td>
-                                    <td class="text-center text-white bg-gray-800 bg-opacity-50">{{ sh.turno }}</td>
-                                    <td class="text-center text-white bg-gray-800 bg-opacity-50">{{ sh.libre }}</td>
-                                    <td class="bg-gray-800 bg-opacity-50">
-                                        <button type="submit" name="delete_row" value="{{ sh.id }}" class="bg-red-600 hover:bg-red-700 text-white rounded px-2 py-1 text-xs" onclick="return confirm('¿Eliminar este partido?')">Eliminar</button>
-                                        <button type="button" onclick="openEditModal('{{ sh.id }}', '{{ sh.equipo_local.id }}', '{{ sh.equipo_visita.id }}', '{{ sh.horario|time:'H:i' }}', '{{ sh.fecha|date:'Y-m-d' }}', '{{ sh.cancha }}', '{{ sh.turno }}', '{{ sh.libre }}')" class="bg-yellow-600 hover:bg-yellow-700 text-white rounded px-2 py-1 text-xs ml-1">Editar</button>
-                                    </td>
-                                </tr>
-                                {% empty %}
-                                <tr><td colspan="12" class="text-center text-gray-400">No hay partidos en esta jornada.</td></tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                        </div>
-                        <button type="submit" class="mt-2 bg-green-600 hover:bg-green-700 text-white font-bold py-1 px-4 rounded shadow transition">Guardar Cambios</button>
+                        <input type="hidden" name="fase_id" value="{{ fase.id }}">
+                        <button type="submit" name="add_jornada" value="1" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-1 px-4 rounded shadow transition">Añadir Jornada</button>
                     </form>
-                {% empty %}
-                    <div class="text-gray-400 mb-4 text-center">No hay jornadas en esta fase.</div>
-                {% endfor %}
+                    {% for jornada in fase.jornadas.all %}
+                        <div class="bg-blue-100 text-blue-800 font-semibold rounded px-3 py-1 flex flex-col items-center justify-center mb-1 shadow">
+                            <span class="text-base text-center w-full">{{ jornada.nombre }}</span>
+                            <div class="flex items-center justify-center mt-2">
+                                <form method="post" style="display:inline;">
+                                    {% csrf_token %}
+                                    <button type="submit" name="delete_jornada" value="{{ jornada.id }}" class="ml-2 bg-blue-600 hover:bg-blue-700 text-white rounded px-2 py-1 text-xs" onclick="return confirm('¿Eliminar esta jornada y todos sus partidos?')">
+                                        Eliminar Jornada
+                                    </button>
+                                </form>
+                                <button type="button" onclick="openModal('{{ jornada.id }}')" class="ml-2 bg-green-600 hover:bg-green-700 text-white rounded px-2 py-1 text-xs">Añadir Partido</button>
+                            </div>
+                        </div>
+                        <form method="post" class="mb-4">
+                            {% csrf_token %}
+                            <div class="overflow-x-auto">
+                            <table class="min-w-full text-xs md:text-sm bg-gray-800 rounded shadow">
+                                <thead>
+                                    <tr>
+                                        <th class="px-2 py-1 bg-blue-900">Local</th>
+                                        <th class="px-2 py-1 bg-blue-900">EP_LOCAL</th>
+                                        <th class="px-2 py-1 bg-blue-900">G_Local</th>
+                                        <th class="px-2 py-1 bg-purple-900">VS</th>
+                                        <th class="px-2 py-1 bg-red-900">G_Visita</th>
+                                        <th class="px-2 py-1 bg-red-900">EP_VISITA</th>
+                                        <th class="px-2 py-1 bg-red-900">Visita</th>
+                                        <th class="px-2 py-1 bg-gray-900">Hora</th>
+                                        <th class="px-2 py-1 bg-gray-900">Fecha</th>
+                                        <th class="px-2 py-1 bg-gray-900">Cancha</th>
+                                        <th class="px-2 py-1 bg-gray-900">Turno</th>
+                                        <th class="px-2 py-1 bg-gray-900">Libre</th>
+                                        <th class="px-2 py-1 bg-gray-900">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for sh in jornada.partidos_seniors.all %}
+                                    <tr id="jornada-{{ jornada.id }}-partido-{{ sh.id }}">
+                                        <input type="hidden" name="id_{{ sh.id }}" value="{{ sh.id }}">
+                                        <td class="text-center text-white bg-blue-800 bg-opacity-50">{{ sh.equipo_local.club }}</td>
+                                        <td class="text-center text-white bg-blue-800 bg-opacity-50">{{ sh.estado_partido_local }}</td>
+                                        <td class="bg-blue-800 bg-opacity-50">
+                                            <input type="number" name="goles_local_{{ sh.id }}" value="{{ sh.goles_local }}" min="0" class="bg-gray-900 text-white rounded w-16 px-1">
+                                        </td>
+                                        <td class="text-center text-white bg-purple-800 bg-opacity-50 font-bold">VS</td>
+                                        <td class="bg-red-800 bg-opacity-50">
+                                            <input type="number" name="goles_visita_{{ sh.id }}" value="{{ sh.goles_visita }}" min="0" class="bg-gray-900 text-white rounded w-16 px-1">
+                                        </td>
+                                        <td class="text-center text-white bg-red-800 bg-opacity-50">{{ sh.estado_partido_visita }}</td>
+                                        <td class="text-center text-white bg-red-800 bg-opacity-50">{{ sh.equipo_visita.club }}</td>
+                                        <td class="text-center text-white bg-gray-800 bg-opacity-50">{{ sh.horario }}</td>
+                                        <td class="text-center text-white bg-gray-800 bg-opacity-50">{{ sh.fecha|date:'Y-m-d' }}</td>
+                                        <td class="text-center text-white bg-gray-800 bg-opacity-50">{{ sh.cancha }}</td>
+                                        <td class="text-center text-white bg-gray-800 bg-opacity-50">{{ sh.turno }}</td>
+                                        <td class="text-center text-white bg-gray-800 bg-opacity-50">{{ sh.libre }}</td>
+                                        <td class="bg-gray-800 bg-opacity-50">
+                                            <button type="submit" name="delete_row" value="{{ sh.id }}" class="bg-red-600 hover:bg-red-700 text-white rounded px-2 py-1 text-xs" onclick="return confirm('¿Eliminar este partido?')">Eliminar</button>
+                                            <button type="button" onclick="openEditModal('{{ sh.id }}', '{{ sh.equipo_local.id }}', '{{ sh.equipo_visita.id }}', '{{ sh.horario|time:'H:i' }}', '{{ sh.fecha|date:'Y-m-d' }}', '{{ sh.cancha }}', '{{ sh.turno }}', '{{ sh.libre }}')" class="bg-yellow-600 hover:bg-yellow-700 text-white rounded px-2 py-1 text-xs ml-1">Editar</button>
+                                        </td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr><td colspan="12" class="text-center text-gray-400">No hay partidos en esta jornada.</td></tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                            </div>
+                            <button type="submit" class="mt-2 bg-green-600 hover:bg-green-700 text-white font-bold py-1 px-4 rounded shadow transition">Guardar Cambios</button>
+                        </form>
+                    {% empty %}
+                        <div class="text-gray-400 mb-4 text-center">No hay jornadas en esta fase.</div>
+                    {% endfor %}
+                </div>
             </div>
         {% empty %}
             <div class="text-gray-400 text-center">No hay fases creadas.</div>
         {% endfor %}
+        </div>
 
         <!-- Modal para añadir partido -->
         <div id="addModalBg" class="modal-bg">
@@ -303,6 +342,54 @@ document.addEventListener('DOMContentLoaded', function() {
                 row.classList.remove('ring-4', 'ring-yellow-400', 'animate-pulse');
             }, 2500);
         }
+    }
+
+    // FASE PAGINATION LOGIC
+    var fasePages = document.querySelectorAll('.fase-page');
+    var faseBtns = document.querySelectorAll('.fase-pagination-btn[data-fase-index]');
+    var prevBtn = document.getElementById('fase-prev-btn');
+    var nextBtn = document.getElementById('fase-next-btn');
+    var totalFases = fasePages.length;
+    var currentFase = 0;
+
+    function saveFaseIndex(index) {
+        localStorage.setItem('seniors_fase_index', index);
+    }
+    function loadFaseIndex() {
+        var idx = parseInt(localStorage.getItem('seniors_fase_index'));
+        if (!isNaN(idx) && idx >= 0 && idx < totalFases) {
+            return idx;
+        }
+        return 0;
+    }
+
+    function showFase(index) {
+        if (index < 0 || index >= totalFases) return;
+        fasePages.forEach(function(page, i) {
+            page.classList.toggle('active', i === index);
+        });
+        faseBtns.forEach(function(btn, i) {
+            btn.classList.toggle('active', i === index);
+        });
+        currentFase = index;
+        saveFaseIndex(index);
+    }
+
+    if (totalFases > 0) {
+        faseBtns.forEach(function(btn, i) {
+            btn.addEventListener('click', function() {
+                showFase(i);
+            });
+        });
+        if (prevBtn && nextBtn) {
+            prevBtn.addEventListener('click', function() {
+                showFase((currentFase - 1 + totalFases) % totalFases);
+            });
+            nextBtn.addEventListener('click', function() {
+                showFase((currentFase + 1) % totalFases);
+            });
+        }
+        showFase(loadFaseIndex());
     }
 });
 </script>
