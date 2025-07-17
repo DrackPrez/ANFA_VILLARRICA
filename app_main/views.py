@@ -7,9 +7,40 @@ from .models import SerieJuvenil, Tablero_SerieJuvenil,SeriePrimeraInfantil,Tabl
 from .models import SerieTerceraInfantil, Tablero_SerieTerceraInfantil
 from django.views.decorators.csrf import csrf_exempt
 from collections import defaultdict
+from datetime import date
 
 def menu(request):
-    return render(request, 'menu.html')
+    hoy = date.today()
+    proximos_partidos = []
+
+    # (modelo, nombre legible de la serie)
+    series = [
+        (SerieHonor, "1ra Adultos Honor"),
+        (SerieSegundaAdultos, "2da Adultos"),
+        (SerieSeniors, "Seniors"),
+        (SerieSuperSeniors, "Super Seniors"),
+        (SerieJuvenil, "Juvenil"),
+        (SeriePrimeraInfantil, "Primera Infantil"),
+        (SerieSegundaInfantil, "Segunda Infantil"),
+        (SerieTerceraInfantil, "Tercera Infantil"),
+        (SerieFemenino, "Femenino"),
+    ]
+
+    for modelo, nombre_serie in series:
+        for p in modelo.objects.filter(fecha__gte=hoy).order_by('fecha', 'horario'):
+            proximos_partidos.append({
+                'fecha': p.fecha,
+                'hora': p.horario if hasattr(p, 'horario') else getattr(p, 'hora', None),
+                'serie': nombre_serie,
+                'fase': p.jornada.fase.nombre if p.jornada and p.jornada.fase else '',
+                'jornada': p.jornada.nombre if p.jornada else '',
+                'equipo_local': p.equipo_local,
+                'equipo_visita': p.equipo_visita,
+                'cancha': p.cancha,
+            })
+
+    proximos_partidos.sort(key=lambda x: (x['fecha'], x['hora'] or ''))
+    return render(request, 'menu.html', {'proximos_partidos': proximos_partidos})
 
 def tercera_infantil(request):
     return render(request, '3era_infantil')
@@ -1184,6 +1215,7 @@ def serie_juvenil(request):
                         fase_ids_actualizadas.add(sh.jornada.fase_id)
                     except SerieJuvenil.DoesNotExist:
                         continue
+            # Actualizar tabla después de actualizar goles/partidos
             for fase_id in fase_ids_actualizadas:
                 fase = Fase.objects.get(id=fase_id)
                 actualizar_tabla_posiciones_juvenil(fase)

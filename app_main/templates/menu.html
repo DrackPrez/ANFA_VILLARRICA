@@ -47,6 +47,47 @@
     </div>
 </div>
 </section>
+
+<!-- NUEVO: Próximos Partidos -->
+<section class="mb-12 p-6 border-2 border-yellow-500 rounded-lg bg-gray-800 bg-opacity-80">
+    <h2 class="text-xl font-semibold mb-4 text-center text-yellow-300">PRÓXIMOS PARTIDOS</h2>
+    <div class="overflow-x-auto rounded-lg shadow">
+        <table class="min-w-full bg-gray-900 text-gray-100 text-sm">
+            <thead>
+                <tr>
+                    <th class="px-2 py-2">Fecha</th>
+                    <th class="px-2 py-2">Hora</th>
+                    <th class="px-2 py-2">Serie</th>
+                    <th class="px-2 py-2">Fase</th>
+                    <th class="px-2 py-2">Jornada</th>
+                    <th class="px-2 py-2">Local</th>
+                    <th class="px-2 py-2">Visita</th>
+                    <th class="px-2 py-2">Cancha</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if proximos_partidos %}
+                    {% for partido in proximos_partidos %}
+                    <tr class="border-b border-gray-800">
+                        <td class="px-2 py-2 text-center">{{ partido.fecha }}</td>
+                        <td class="px-2 py-2 text-center">{{ partido.hora }}</td>
+                        <td class="px-2 py-2 text-center">{{ partido.serie }}</td>
+                        <td class="px-2 py-2 text-center">{{ partido.fase }}</td>
+                        <td class="px-2 py-2 text-center">{{ partido.jornada }}</td>
+                        <td class="px-2 py-2 text-center">{{ partido.equipo_local }}</td>
+                        <td class="px-2 py-2 text-center">{{ partido.equipo_visita }}</td>
+                        <td class="px-2 py-2 text-center">{{ partido.cancha }}</td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="8" class="px-4 py-4 text-center text-gray-400">No hay partidos próximos registrados.</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</section>
 <section class="mb-12 p-6 border-2 border-red-700 rounded-lg bg-gray-800 bg-opacity-80">
 <h2 class="text-xl font-semibold mb-4 text-center text-red-300">NUESTROS CLUBES</h2>
 
