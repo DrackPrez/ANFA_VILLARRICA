@@ -6,10 +6,12 @@ from .models import SerieSegundaInfantil, Tablero_SerieSegundaInfantil
 from .models import SerieJuvenil, Tablero_SerieJuvenil,SeriePrimeraInfantil,Tablero_SeriePrimeraInfantil
 from .models import SerieTerceraInfantil, Tablero_SerieTerceraInfantil
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
 from collections import defaultdict
 from datetime import date
 from django.urls import reverse
 
+@login_required
 def menu(request):
     hoy = date.today()
     proximos_partidos = []
@@ -50,14 +52,17 @@ def menu(request):
     proximos_partidos.sort(key=lambda x: (x['fecha'], x['hora'] or ''))
     return render(request, 'menu.html', {'proximos_partidos': proximos_partidos})
 
+@login_required
 def tercera_infantil(request):
     return render(request, '3era_infantil')
 
+@login_required
 def clubes(request):
     clubes = Clubes.objects.all()
     return render(request, 'clubes.html', {'clubes': clubes})
 
 @csrf_exempt  # Add this decorator for testing only!
+@login_required
 def clubes_add(request):
     if request.method == 'POST':
         nombre = request.POST.get('nombre')
@@ -79,6 +84,7 @@ def clubes_add(request):
         return redirect('clubes')
     return redirect('clubes')
 
+@login_required
 def clubes_edit(request, club_id):
     club = get_object_or_404(Clubes, id=club_id)
     if request.method == 'POST':
@@ -96,6 +102,7 @@ def clubes_edit(request, club_id):
         return redirect('clubes')
     return render(request, 'clubes_form.html', {'club': club})
 
+@login_required
 def clubes_delete(request, club_id):
     club = get_object_or_404(Clubes, id=club_id)
     if request.method == 'POST':
@@ -103,10 +110,12 @@ def clubes_delete(request, club_id):
         return redirect('clubes')
     return render(request, 'clubes_confirm_delete.html', {'club': club})
 
+@login_required
 def encargados_clubes(request):
     clubes = Clubes.objects.all().select_related('encargado')
     return render(request, 'encargados_clubes.html', {'clubes': clubes})
 
+@login_required
 def encargado_edit(request, club_id):
     club = get_object_or_404(Clubes, id=club_id)
     encargado = getattr(club, 'encargado', None)
@@ -170,6 +179,7 @@ def calcular_tablero_general():
     )
     return clasificacion
 
+@login_required
 def serie_honor(request):
     if request.method == 'POST':
         if 'add_fase' in request.POST:
@@ -324,6 +334,7 @@ def calcular_tablero_general_femenino():
     )
     return clasificacion
 
+@login_required
 def serie_femenino(request):
     if request.method == 'POST':
         if 'add_fase' in request.POST:
@@ -475,6 +486,7 @@ def calcular_tablero_general_segunda_adultos():
     )
     return clasificacion
 
+@login_required
 def serie_segunda_adultos(request):
     if request.method == 'POST':
         if 'add_fase' in request.POST:
@@ -625,6 +637,7 @@ def calcular_tablero_general_seniors():
     )
     return clasificacion
 
+@login_required
 def serie_seniors(request):
     if request.method == 'POST':
         if 'add_fase' in request.POST:
@@ -776,6 +789,7 @@ def calcular_tablero_general_super_seniors():
     )
     return clasificacion
 
+@login_required
 def serie_super_seniors(request):
     if request.method == 'POST':
         if 'add_fase' in request.POST:
@@ -927,6 +941,7 @@ def calcular_tablero_general_segunda_infantil():
     )
     return clasificacion
 
+@login_required
 def serie_segunda_infantil(request):
     if request.method == 'POST':
         if 'add_fase' in request.POST:
@@ -1076,6 +1091,7 @@ def calcular_tablero_general_juvenil():
     )
     return clasificacion
 
+@login_required
 def serie_juvenil(request):
     if request.method == 'POST':
         if 'add_fase' in request.POST:
@@ -1227,6 +1243,7 @@ def calcular_tablero_general_primera_infantil():
     )
     return clasificacion
 
+@login_required
 def serie_primera_infantil(request):
     if request.method == 'POST':
         if 'add_fase' in request.POST:
@@ -1376,6 +1393,7 @@ def calcular_tablero_general_tercera_infantil():
     )
     return clasificacion
 
+@login_required
 def serie_tercera_infantil(request):
     if request.method == 'POST':
         if 'add_fase' in request.POST:
