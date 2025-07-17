@@ -371,7 +371,7 @@ def serie_femenino(request):
             goles_visita = request.POST.get('goles_visita_{}'.format(partido_id), partido.goles_visita)
             partido.goles_local = int(goles_local) if str(goles_local).isdigit() else 0
             partido.goles_visita = int(goles_visita) if str(goles_visita).isdigit() else 0
-            partido.actualizar_estadisticas()
+            partido.actualizar_estados()
             partido.save()
             actualizar_tabla_posiciones_femenino(partido.jornada.fase)
             return redirect('serie_femenino')
@@ -394,7 +394,7 @@ def serie_femenino(request):
                         sh.cancha = request.POST.get(f'cancha_{row_id}', sh.cancha)
                         sh.turno = request.POST.get(f'turno_{row_id}', sh.turno)
                         sh.libre = request.POST.get(f'libre_{row_id}', sh.libre)
-                        sh.actualizar_estadisticas()
+                        sh.actualizar_estados()
                         sh.save()
                         fase_ids_actualizadas.add(sh.jornada.fase_id)
                     except SerieFemenino.DoesNotExist:
@@ -529,7 +529,7 @@ def serie_segunda_adultos(request):
             goles_visita = request.POST.get('goles_visita_{}'.format(partido_id), partido.goles_visita)
             partido.goles_local = int(goles_local) if str(goles_local).isdigit() else 0
             partido.goles_visita = int(goles_visita) if str(goles_visita).isdigit() else 0
-            partido.actualizar_estadisticas()
+            partido.actualizar_estados()
             partido.save()
             actualizar_tabla_posiciones_segunda_adultos(partido.jornada.fase)
             return redirect('serie_segunda_adultos')
@@ -552,7 +552,7 @@ def serie_segunda_adultos(request):
                         sh.cancha = request.POST.get(f'cancha_{row_id}', sh.cancha)
                         sh.turno = request.POST.get(f'turno_{row_id}', sh.turno)
                         sh.libre = request.POST.get(f'libre_{row_id}', sh.libre)
-                        sh.actualizar_estadisticas()
+                        sh.actualizar_estados()
                         sh.save()
                         fase_ids_actualizadas.add(sh.jornada.fase_id)
                     except SerieSegundaAdultos.DoesNotExist:
@@ -839,7 +839,7 @@ def serie_super_seniors(request):
             goles_visita = request.POST.get('goles_visita_{}'.format(partido_id), partido.goles_visita)
             partido.goles_local = int(goles_local) if str(goles_local).isdigit() else 0
             partido.goles_visita = int(goles_visita) if str(goles_visita).isdigit() else 0
-            partido.actualizar_estadisticas()
+            partido.actualizar_estados()
             partido.save()
             actualizar_tabla_posiciones_super_seniors(partido.jornada.fase)
             return redirect('serie_super_seniors')
@@ -994,7 +994,7 @@ def serie_segunda_infantil(request):
             goles_visita = request.POST.get('goles_visita_{}'.format(partido_id), partido.goles_visita)
             partido.goles_local = int(goles_local) if str(goles_local).isdigit() else 0
             partido.goles_visita = int(goles_visita) if str(goles_visita).isdigit() else 0
-            partido.actualizar_estadisticas()
+            partido.actualizar_estados()
             partido.save()
             actualizar_tabla_posiciones_segunda_infantil(partido.jornada.fase)
             return redirect('serie_segunda_infantil')
@@ -1017,7 +1017,7 @@ def serie_segunda_infantil(request):
                         sh.cancha = request.POST.get(f'cancha_{row_id}', sh.cancha)
                         sh.turno = request.POST.get(f'turno_{row_id}', sh.turno)
                         sh.libre = request.POST.get(f'libre_{row_id}', sh.libre)
-                        sh.actualizar_estadisticas()
+                        sh.actualizar_estados()
                         sh.save()
                         fase_ids_actualizadas.add(sh.jornada.fase_id)
                     except SerieSegundaInfantil.DoesNotExist:
@@ -1149,7 +1149,7 @@ def serie_juvenil(request):
             goles_visita = request.POST.get('goles_visita_{}'.format(partido_id), partido.goles_visita)
             partido.goles_local = int(goles_local) if str(goles_local).isdigit() else 0
             partido.goles_visita = int(goles_visita) if str(goles_visita).isdigit() else 0
-            partido.actualizar_estadisticas()
+            partido.actualizar_estados()
             partido.save()
             actualizar_tabla_posiciones_juvenil(partido.jornada.fase)
             return redirect('serie_juvenil')
