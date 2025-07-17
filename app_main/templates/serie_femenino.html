@@ -351,6 +351,18 @@ document.addEventListener('DOMContentLoaded', function() {
     var totalFases = fasePages.length;
     var currentFase = 0;
 
+    // Guardar/cargar página activa en localStorage
+    function saveFaseIndex(index) {
+        localStorage.setItem('femenino_fase_index', index);
+    }
+    function loadFaseIndex() {
+        var idx = parseInt(localStorage.getItem('femenino_fase_index'));
+        if (!isNaN(idx) && idx >= 0 && idx < totalFases) {
+            return idx;
+        }
+        return 0;
+    }
+
     function showFase(index) {
         if (index < 0 || index >= totalFases) return;
         fasePages.forEach(function(page, i) {
@@ -360,6 +372,7 @@ document.addEventListener('DOMContentLoaded', function() {
             btn.classList.toggle('active', i === index);
         });
         currentFase = index;
+        saveFaseIndex(index);
     }
 
     if (totalFases > 0) {
@@ -376,7 +389,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 showFase((currentFase + 1) % totalFases);
             });
         }
-        showFase(0);
+        showFase(loadFaseIndex());
     }
 });
 </script>
