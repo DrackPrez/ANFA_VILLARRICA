@@ -16,5 +16,6 @@ urlpatterns = [
     path('serie_seniors/', views.serie_seniors, name='serie_seniors'),
     path('serie_super_seniors/', views.serie_super_seniors, name='serie_super_seniors'),
     path('serie_segunda_infantil/', views.serie_segunda_infantil, name='serie_segunda_infantil'),
+    path('serie_juvenil/', views.serie_juvenil, name='serie_juvenil'),
 ]
 
