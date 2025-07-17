@@ -192,14 +192,18 @@
                     <label class="font-semibold">Equipo Local
                         <select name="modal_equipo_local" required>
                             {% for club in clubes %}
-                                <option value="{{ club.id }}">{{ club.club }}</option>
+                                {% if club.femenino %}
+                                    <option value="{{ club.id }}">{{ club.club }}</option>
+                                {% endif %}
                             {% endfor %}
                         </select>
                     </label>
                     <label class="font-semibold">Equipo Visita
                         <select name="modal_equipo_visita" required>
                             {% for club in clubes %}
-                                <option value="{{ club.id }}">{{ club.club }}</option>
+                                {% if club.femenino %}
+                                    <option value="{{ club.id }}">{{ club.club }}</option>
+                                {% endif %}
                             {% endfor %}
                         </select>
                     </label>
@@ -235,14 +239,18 @@
                     <label class="font-semibold">Equipo Local
                         <select name="edit_equipo_local" id="edit_equipo_local" required>
                             {% for club in clubes %}
-                                <option value="{{ club.id }}">{{ club.club }}</option>
+                                {% if club.femenino %}
+                                    <option value="{{ club.id }}">{{ club.club }}</option>
+                                {% endif %}
                             {% endfor %}
                         </select>
                     </label>
                     <label class="font-semibold">Equipo Visita
                         <select name="edit_equipo_visita" id="edit_equipo_visita" required>
                             {% for club in clubes %}
-                                <option value="{{ club.id }}">{{ club.club }}</option>
+                                {% if club.femenino %}
+                                    <option value="{{ club.id }}">{{ club.club }}</option>
+                                {% endif %}
                             {% endfor %}
                         </select>
                     </label>

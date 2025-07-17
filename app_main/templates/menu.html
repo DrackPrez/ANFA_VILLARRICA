@@ -38,96 +38,273 @@
 <section class="mb-12 p-6 border-2 border-red-700 rounded-lg bg-gray-800 bg-opacity-80">
 <h2 class="text-xl font-semibold mb-2 text-center text-red-300">QUIÉNES SOMOS</h2>
 <p class="text-gray-200 text-center mb-4">La ANFA Villarrica (Asociación de Fútbol de Villarrica) es la liga deportiva que agrupa a 10 clubes asociados en Villarrica. Organizamos el Campeonato ANFA Villarrica 2025 @demarca_sport en el Estadio Municipal de Villarrica, promoviendo la pasión y el desarrollo del fútbol local.</p>
-<div class="text-center p-4 border border-dashed border-red-700 rounded-md">
-<p class="text-lg text-white">DIRECTORIO</p>
-
-<div class="flex flex-col md:flex-row justify-center items-center gap-4 mt-6">
-    <a href="{% url 'clubes' %}" class="bg-white text-red-700 font-semibold px-6 py-3 rounded-lg shadow hover:bg-red-100 transition">Clubes</a>
-    
-    <a href="{% url 'encargados_clubes' %}" class="bg-white text-red-700 font-semibold px-6 py-3 rounded-lg shadow hover:bg-red-100 transition">Encargados-Clubes</a>
-</div>
+<div class="text-center p-4 border border-dashed border-red-700 rounded-md bg-gray-900 bg-opacity-80">
+    <p class="text-2xl font-bold text-white mb-4 tracking-wide">DIRECTORIO</p>
+   
+    <div class="flex flex-col md:flex-row justify-center items-center gap-4 mt-4">
+        <a href="{% url 'clubes' %}" class="bg-white text-red-700 font-semibold px-6 py-3 rounded-lg shadow hover:bg-red-100 transition">Clubes</a>
+        <a href="{% url 'encargados_clubes' %}" class="bg-white text-red-700 font-semibold px-6 py-3 rounded-lg shadow hover:bg-red-100 transition">Encargados-Clubes</a>
+    </div>
 </div>
 </section>
 <section class="mb-12 p-6 border-2 border-red-700 rounded-lg bg-gray-800 bg-opacity-80">
 <h2 class="text-xl font-semibold mb-4 text-center text-red-300">NUESTROS CLUBES</h2>
-<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
-<div class="flex flex-col items-center p-2">
-<img alt="Club Barrera" class="h-40 w-auto mb-1" src="{% static 'img/barrera.png' %}"/>
-</div>
-<div class="flex flex-col items-center p-2">
-<img alt="Colo Colo Villarrica" class="h-40 w-auto mb-1" src="{% static 'img/colocolo_villarrica.png' %}"/>
-</div>
-<div class="flex flex-col items-center p-2">
-<img alt="Pilmahue Villarrica" class="h-40 w-auto mb-1" src="{% static 'img/pilmahue_villarrica.png' %}"/>
-</div>
-<div class="flex flex-col items-center p-2">
-<img alt="Logo Blanco" class="h-40 w-auto mb-1" src="{% static 'img/club3.png' %}"/>
-</div>
-<div class="flex flex-col items-center p-2">
-<img alt="Ferroviila Villarrica" class="h-40 w-auto mb-1" src="{% static 'img/ferrovilla.png' %}"/>
-</div>
-<div class="flex flex-col items-center p-2">
-<img alt="ANFA Villarrica" class="h-40 w-auto mb-1" src="{% static 'img/anfa.png' %}"/>
-</div>
-<div class="flex flex-col items-center p-2">
-<img alt="Novena Medios" class="h-40 w-auto mb-1" src="{% static 'img/novena.png' %}"/>
-</div>
-<div class="flex flex-col items-center p-2">
-<img alt="Kolping Villarrica" class="h-40 w-auto mb-1" src="{% static 'img/kolping.png' %}"/>
-</div>
-<div class="flex flex-col items-center p-2">
-<img alt="Demarca Sport" class="h-40 w-auto mb-1" src="{% static 'img/demarca.png' %}"/>
-</div>
-<div class="flex flex-col items-center p-2">
-<img alt="CDUC Villarrica" class="h-40 w-auto mb-1" src="{% static 'img/catolica.png' %}"/>
-</div>
-<div class="flex flex-col items-center p-2">
-<img alt="Unión Lican Ray" class="h-40 w-auto mb-1" src="{% static 'img/lican.png' %}"/>
-</div>
-<div class="flex flex-col items-center p-2">
-<img alt="Comercial Villarrica" class="h-40 w-auto mb-1" src="{% static 'img/comercial.png' %}"/>
-</div>
-<div class="flex flex-col items-center p-2">
-<img alt="O'Higgins Villarrica" class="h-40 w-auto mb-1" src="{% static 'img/higins.png' %}"/>
-</div>
-<div class="flex flex-col items-center p-2">
-<img alt="Andes Asesorías" class="h-40 w-auto mb-1" src="{% static 'img/andes.png' %}"/>
-</div>
-<div class="flex flex-col items-center p-2">
-<img alt="Club Deportivo Villarrica" class="h-40 w-auto mb-1" src="{% static 'img/club_villarrica.png' %}"/>
-</div>
+
+<style>
+    .club-carousel-bg {
+        background: linear-gradient(135deg, #18171a 0%, #3a0d0d 100%);
+        border-radius: 1rem;
+        box-shadow: 0 4px 32px #000a;
+    }
+    .carousel-track {
+        display: flex;
+        align-items: center;
+        gap: 3.5rem;
+        will-change: transform;
+        /* Usar animación infinita con scroll más largo para suavidad */
+        animation: scroll-left 56s linear infinite;
+    }
+    .carousel-row {
+        overflow: hidden;
+        width: 100%;
+        height: 150px;
+        position: relative;
+    }
+    @keyframes scroll-left {
+        0% { transform: translateX(0); }
+        100% { transform: translateX(-100%); }
+    }
+    .carousel-logo {
+        border-radius: 0.75rem;
+        padding: 0;
+        box-shadow: none;
+        transition: transform 0.3s;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background: none;
+        min-width: 140px;
+        max-width: 180px;
+    }
+    .carousel-logo img {
+        height: 110px;
+        max-width: 160px;
+        width: auto;
+        background: transparent;
+        border-radius: 0.5rem;
+        margin-bottom: 0.25rem;
+        filter: drop-shadow(0 2px 8px #0008);
+        transition: transform 0.3s;
+        object-fit: contain;
+    }
+    .carousel-logo span {
+        color: #eee;
+        font-size: 0.9rem;
+        font-weight: 600;
+        text-align: center;
+        text-shadow: 0 1px 2px #000a;
+    }
+    .carousel-logo:hover img {
+        transform: scale(1.08);
+    }
+</style>
+
+<div class="w-full club-carousel-bg py-6 px-2">
+    <div class="carousel-row">
+        <div class="carousel-track">
+            <!-- Logos fila única (duplicados para loop infinito suave) -->
+            <div class="carousel-logo">
+                <img src="{% static 'img/barrera.png' %}" alt="Club Barrera">
+                <span>Club Barrera</span>
+            </div>
+            <div class="carousel-logo">
+                <img src="{% static 'img/colocolo_villarrica.png' %}" alt="Colo Colo Villarrica">
+                <span>Colo Colo Villarrica</span>
+            </div>
+            <div class="carousel-logo">
+                <img src="{% static 'img/pilmahue_villarrica.png' %}" alt="Pilmahue Villarrica">
+                <span>Pilmahue Villarrica</span>
+            </div>
+            <div class="carousel-logo">
+                <img src="{% static 'img/club3.png' %}" alt="Logo Blanco">
+                <span>Logo </span>
+            </div>
+            <div class="carousel-logo">
+                <img src="{% static 'img/ferrovilla.png' %}" alt="Ferroviila Villarrica">
+                <span>Ferroviila Villarrica</span>
+            </div>
+            <div class="carousel-logo">
+                <img src="{% static 'img/anfa.png' %}" alt="ANFA Villarrica">
+                <span>ANFA Villarrica</span>
+            </div>
+            <div class="carousel-logo">
+                <img src="{% static 'img/novena.png' %}" alt="Novena Medios">
+                <span>Novena Medios</span>
+            </div>
+            <div class="carousel-logo">
+                <img src="{% static 'img/kolping.png' %}" alt="Kolping Villarrica">
+                <span>Kolping Villarrica</span>
+            </div>
+            <div class="carousel-logo">
+                <img src="{% static 'img/demarca.png' %}" alt="Demarca Sport">
+                <span>Demarca Sport</span>
+            </div>
+            <div class="carousel-logo">
+                <img src="{% static 'img/catolica.png' %}" alt="CDUC Villarrica">
+                <span>CDUC Villarrica</span>
+            </div>
+            <div class="carousel-logo">
+                <img src="{% static 'img/lican.png' %}" alt="Unión Lican Ray">
+                <span>Unión Lican Ray</span>
+            </div>
+            <div class="carousel-logo">
+                <img src="{% static 'img/comercial.png' %}" alt="Comercial Villarrica">
+                <span>Comercial Villarrica</span>
+            </div>
+            <div class="carousel-logo">
+                <img src="{% static 'img/higins.png' %}" alt="O'Higgins Villarrica">
+                <span>O'Higgins Villarrica</span>
+            </div>
+            <div class="carousel-logo">
+                <img src="{% static 'img/andes.png' %}" alt="Andes Asesorías">
+                <span>Andes Asesorías</span>
+            </div>
+            <div class="carousel-logo">
+                <img src="{% static 'img/club_villarrica.png' %}" alt="Club Deportivo Villarrica">
+                <span>Club Deportivo Villarrica</span>
+            </div>
+            <!-- Duplicados para loop infinito suave -->
+            <div class="carousel-logo">
+                <img src="{% static 'img/barrera.png' %}" alt="Club Barrera">
+                <span>Club Barrera</span>
+            </div>
+            <div class="carousel-logo">
+                <img src="{% static 'img/colocolo_villarrica.png' %}" alt="Colo Colo Villarrica">
+                <span>Colo Colo Villarrica</span>
+            </div>
+            <div class="carousel-logo">
+                <img src="{% static 'img/pilmahue_villarrica.png' %}" alt="Pilmahue Villarrica">
+                <span>Pilmahue Villarrica</span>
+            </div>
+            <div class="carousel-logo">
+                <img src="{% static 'img/club3.png' %}" alt="Logo Blanco">
+                <span>Logo Blanco</span>
+            </div>
+            <div class="carousel-logo">
+                <img src="{% static 'img/ferrovilla.png' %}" alt="Ferroviila Villarrica">
+                <span>Ferroviila Villarrica</span>
+            </div>
+            <div class="carousel-logo">
+                <img src="{% static 'img/anfa.png' %}" alt="ANFA Villarrica">
+                <span>ANFA Villarrica</span>
+            </div>
+            <div class="carousel-logo">
+                <img src="{% static 'img/novena.png' %}" alt="Novena Medios">
+                <span>Novena Medios</span>
+            </div>
+            <div class="carousel-logo">
+                <img src="{% static 'img/kolping.png' %}" alt="Kolping Villarrica">
+                <span>Kolping Villarrica</span>
+            </div>
+            <div class="carousel-logo">
+                <img src="{% static 'img/demarca.png' %}" alt="Demarca Sport">
+                <span>Demarca Sport</span>
+            </div>
+            <div class="carousel-logo">
+                <img src="{% static 'img/catolica.png' %}" alt="CDUC Villarrica">
+                <span>CDUC Villarrica</span>
+            </div>
+            <div class="carousel-logo">
+                <img src="{% static 'img/lican.png' %}" alt="Unión Lican Ray">
+                <span>Unión Lican Ray</span>
+            </div>
+            <div class="carousel-logo">
+                <img src="{% static 'img/comercial.png' %}" alt="Comercial Villarrica">
+                <span>Comercial Villarrica</span>
+            </div>
+            <div class="carousel-logo">
+                <img src="{% static 'img/higins.png' %}" alt="O'Higgins Villarrica">
+                <span>O'Higgins Villarrica</span>
+            </div>
+            <div class="carousel-logo">
+                <img src="{% static 'img/andes.png' %}" alt="Andes Asesorías">
+                <span>Andes Asesorías</span>
+            </div>
+            <div class="carousel-logo">
+                <img src="{% static 'img/club_villarrica.png' %}" alt="Club Deportivo Villarrica">
+                <span>Club Deportivo Villarrica</span>
+            </div>
+        </div>
+    </div>
 </div>
 </section>
 <section class="p-6 border-2 border-red-700 rounded-lg bg-gray-800 bg-opacity-80">
-<h2 class="text-xl font-semibold mb-6 text-center text-red-300">CAMPEONATO DEMARCA SPORT ANFA VILLARRICA 2025</h2>
-<div class="flex flex-wrap justify-center gap-4">
-<a href="{% url 'serie_tercera_infantil' %}">
-    <span class="bg-red-600 text-white text-sm font-medium px-4 py-2 rounded-full hover:bg-red-700 transition">3RA INFANTIL</span>
-</a>
-<a href="{% url 'serie_segunda_infantil' %}">
-    <span class="bg-red-600 text-white text-sm font-medium px-4 py-2 rounded-full hover:bg-red-700 transition">2DA INFANTIL</span>
-</a>
-<a href="{% url 'serie_primera_infantil' %}">
-<span class="bg-red-600 text-white text-sm font-medium px-4 py-2 rounded-full hover:bg-red-700 transition">1RA INFANTIL</span>
-</a>
-<a href="{% url 'serie_juvenil' %}">
-    <span class="bg-red-600 text-white text-sm font-medium px-4 py-2 rounded-full hover:bg-red-700 transition">JUVENILES</span>
-</a>
-<a href="{% url 'serie_honor' %}">
-    <span class="bg-red-600 text-white text-sm font-medium px-4 py-2 rounded-full hover:bg-red-700 transition">1RA ADULTOS HONOR</span>
-</a>
-<a href="{% url 'serie_femenino' %}">
-    <span class="bg-red-600 text-white text-sm font-medium px-4 py-2 rounded-full hover:bg-red-700 transition">- FEMENINO</span>
-</a>
-<a href="{% url 'serie_segunda_adultos' %}">
-    <span class="bg-red-600 text-white text-sm font-medium px-4 py-2 rounded-full hover:bg-red-700 transition">-2DA ADULTOS</span>
-</a>
-<a href="{% url 'serie_seniors' %}">
-    <span class="bg-red-600 text-white text-sm font-medium px-4 py-2 rounded-full hover:bg-red-700 transition">- SENIORS</span>
-</a>
-<a href="{% url 'serie_super_seniors' %}">
-    <span class="bg-red-600 text-white text-sm font-medium px-4 py-2 rounded-full hover:bg-red-700 transition">- SUPER SENIORS</span>
-</a>
+<div class="flex justify-center mb-2">
+    <span class="material-icons text-yellow-400 text-5xl drop-shadow-lg">emoji_events</span>
+</div>
+<h2 class="text-2xl font-extrabold mb-8 text-center text-red-400 tracking-wide flex items-center justify-center gap-2">
+    CAMPEONATO DEMARCA SPORT ANFA VILLARRICA 2025
+</h2>
+<div class="flex flex-wrap justify-center gap-6">
+    <!-- Infantiles: Primera, Segunda, Tercera -->
+    <a href="{% url 'serie_primera_infantil' %}" class="group">
+        <div class="bg-gray-900 bg-opacity-90 border-2 border-red-600 rounded-xl shadow-lg p-6 w-56 flex flex-col items-center hover:scale-105 hover:border-yellow-400 transition-all duration-200">
+            <span class="material-icons text-blue-400 text-4xl mb-2 group-hover:animate-bounce">child_care</span>
+            <span class="text-lg font-bold text-red-200 mb-1">Primera Infantil</span>
+        </div>
+    </a>
+    <a href="{% url 'serie_segunda_infantil' %}" class="group">
+        <div class="bg-gray-900 bg-opacity-90 border-2 border-red-600 rounded-xl shadow-lg p-6 w-56 flex flex-col items-center hover:scale-105 hover:border-yellow-400 transition-all duration-200">
+            <span class="material-icons text-green-400 text-4xl mb-2 group-hover:animate-bounce">child_care</span>
+            <span class="text-lg font-bold text-red-200 mb-1">Segunda Infantil</span>
+        </div>
+    </a>
+    <a href="{% url 'serie_tercera_infantil' %}" class="group">
+        <div class="bg-gray-900 bg-opacity-90 border-2 border-red-600 rounded-xl shadow-lg p-6 w-56 flex flex-col items-center hover:scale-105 hover:border-yellow-400 transition-all duration-200">
+            <span class="material-icons text-yellow-400 text-4xl mb-2 group-hover:animate-bounce">child_care</span>
+            <span class="text-lg font-bold text-red-200 mb-1">Tercera Infantil</span>
+        </div>
+    </a>
+    <!-- Juvenil -->
+    <a href="{% url 'serie_juvenil' %}" class="group">
+        <div class="bg-gray-900 bg-opacity-90 border-2 border-red-600 rounded-xl shadow-lg p-6 w-56 flex flex-col items-center hover:scale-105 hover:border-yellow-400 transition-all duration-200">
+            <span class="material-icons text-blue-400 text-4xl mb-2 group-hover:animate-bounce">face_6</span>
+            <span class="text-lg font-bold text-red-200 mb-1">Juvenil</span>
+        </div>
+    </a>
+    <!-- Adultos -->
+    <a href="{% url 'serie_honor' %}" class="group">
+        <div class="bg-gray-900 bg-opacity-90 border-2 border-red-600 rounded-xl shadow-lg p-6 w-56 flex flex-col items-center hover:scale-105 hover:border-yellow-400 transition-all duration-200">
+            <span class="material-icons text-green-400 text-4xl mb-2 group-hover:animate-bounce">person</span>
+            <span class="text-lg font-bold text-red-200 mb-1">1ra Adultos Honor</span>
+        </div>
+    </a>
+    <a href="{% url 'serie_segunda_adultos' %}" class="group">
+        <div class="bg-gray-900 bg-opacity-90 border-2 border-red-600 rounded-xl shadow-lg p-6 w-56 flex flex-col items-center hover:scale-105 hover:border-yellow-400 transition-all duration-200">
+            <span class="material-icons text-indigo-400 text-4xl mb-2 group-hover:animate-bounce">person</span>
+            <span class="text-lg font-bold text-red-200 mb-1">2da Adultos</span>
+        </div>
+    </a>
+    <!-- Seniors -->
+    <a href="{% url 'serie_seniors' %}" class="group">
+        <div class="bg-gray-900 bg-opacity-90 border-2 border-red-600 rounded-xl shadow-lg p-6 w-56 flex flex-col items-center hover:scale-105 hover:border-yellow-400 transition-all duration-200">
+            <span class="material-icons text-orange-400 text-4xl mb-2 group-hover:animate-bounce">elderly</span>
+            <span class="text-lg font-bold text-red-200 mb-1">Seniors</span>
+        </div>
+    </a>
+    <a href="{% url 'serie_super_seniors' %}" class="group">
+        <div class="bg-gray-900 bg-opacity-90 border-2 border-red-600 rounded-xl shadow-lg p-6 w-56 flex flex-col items-center hover:scale-105 hover:border-yellow-400 transition-all duration-200">
+            <span class="material-icons text-orange-300 text-4xl mb-2 group-hover:animate-bounce">elderly_woman</span>
+            <span class="text-lg font-bold text-red-200 mb-1">Super Seniors</span>
+        </div>
+    </a>
+    <!-- Femenino -->
+    <a href="{% url 'serie_femenino' %}" class="group">
+        <div class="bg-gray-900 bg-opacity-90 border-2 border-red-600 rounded-xl shadow-lg p-6 w-56 flex flex-col items-center hover:scale-105 hover:border-yellow-400 transition-all duration-200">
+            <span class="material-icons text-pink-400 text-4xl mb-2 group-hover:animate-bounce">female</span>
+            <span class="text-lg font-bold text-red-200 mb-1">Femenino</span>
+        </div>
+    </a>
 </div>
 </section>
 </main>

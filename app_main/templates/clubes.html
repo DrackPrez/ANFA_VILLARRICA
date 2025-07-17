@@ -136,32 +136,36 @@
                     <input type="text" id="nombre" name="nombre" required class="w-full px-4 py-2 rounded bg-gray-800 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-red-600 text-gray-100"/>
                 </div>
                 <div class="grid grid-cols-2 gap-2">
-                    <label class="flex items-center gap-2">
-                        <input type="checkbox" name="super_seniors" value="1" class="form-checkbox text-red-600"> Super Seniors
+                    <!-- Nueva casilla para seleccionar todas las series -->
+                    <label class="flex items-center gap-2 col-span-2">
+                        <input type="checkbox" id="select-all-series" class="form-checkbox text-red-600"> Seleccionar todas las series
                     </label>
                     <label class="flex items-center gap-2">
-                        <input type="checkbox" name="seniors" value="1" class="form-checkbox text-red-600"> Seniors
+                        <input type="checkbox" name="super_seniors" value="1" class="form-checkbox text-red-600 series-checkbox"> Super Seniors
                     </label>
                     <label class="flex items-center gap-2">
-                        <input type="checkbox" name="honor" value="1" class="form-checkbox text-red-600"> Honor
+                        <input type="checkbox" name="seniors" value="1" class="form-checkbox text-red-600 series-checkbox"> Seniors
                     </label>
                     <label class="flex items-center gap-2">
-                        <input type="checkbox" name="segunda_honor" value="1" class="form-checkbox text-red-600"> 2da Honor
+                        <input type="checkbox" name="honor" value="1" class="form-checkbox text-red-600 series-checkbox"> Honor
                     </label>
                     <label class="flex items-center gap-2">
-                        <input type="checkbox" name="juveniles" value="1" class="form-checkbox text-red-600"> Juveniles
+                        <input type="checkbox" name="segunda_honor" value="1" class="form-checkbox text-red-600 series-checkbox"> Segunda Honor
                     </label>
                     <label class="flex items-center gap-2">
-                        <input type="checkbox" name="primera_infantil" value="1" class="form-checkbox text-red-600"> 1ra Infantil
+                        <input type="checkbox" name="juveniles" value="1" class="form-checkbox text-red-600 series-checkbox"> Juveniles
                     </label>
                     <label class="flex items-center gap-2">
-                        <input type="checkbox" name="segunda_infantil" value="1" class="form-checkbox text-red-600"> 2da Infantil
+                        <input type="checkbox" name="primera_infantil" value="1" class="form-checkbox text-red-600 series-checkbox"> Primera Infantil
                     </label>
                     <label class="flex items-center gap-2">
-                        <input type="checkbox" name="tercera_infantil" value="1" class="form-checkbox text-red-600"> 3ra Infantil
+                        <input type="checkbox" name="segunda_infantil" value="1" class="form-checkbox text-red-600 series-checkbox"> Segunda Infantil
                     </label>
                     <label class="flex items-center gap-2">
-                        <input type="checkbox" name="femenino" value="1" class="form-checkbox text-red-600"> Femenino
+                        <input type="checkbox" name="tercera_infantil" value="1" class="form-checkbox text-red-600 series-checkbox"> Tercera Infantil
+                    </label>
+                    <label class="flex items-center gap-2">
+                        <input type="checkbox" name="femenino" value="1" class="form-checkbox text-red-600 series-checkbox"> Femenino
                     </label>
                 </div>
                 <div class="flex justify-end gap-2 mt-4">
@@ -186,5 +190,27 @@
             </form>
         </div>
     </div>
+    <script>
+        // Script para seleccionar/deseleccionar todas las series
+        document.addEventListener('DOMContentLoaded', function() {
+            const selectAll = document.getElementById('select-all-series');
+            const seriesCheckboxes = document.querySelectorAll('.series-checkbox');
+            if (selectAll) {
+                selectAll.addEventListener('change', function() {
+                    seriesCheckboxes.forEach(cb => cb.checked = selectAll.checked);
+                });
+                // Si se desmarca alguna, desmarcar "Seleccionar todas"
+                seriesCheckboxes.forEach(cb => {
+                    cb.addEventListener('change', function() {
+                        if (!cb.checked) {
+                            selectAll.checked = false;
+                        } else if ([...seriesCheckboxes].every(c => c.checked)) {
+                            selectAll.checked = true;
+                        }
+                    });
+                });
+            }
+        });
+    </script>
 </body>
 </html>
