@@ -289,67 +289,88 @@
 <h2 class="text-2xl font-extrabold mb-8 text-center text-purple-400 tracking-wide flex items-center justify-center gap-2">
     CAMPEONATO DEMARCA SPORT ANFA VILLARRICA 2025
 </h2>
-<div class="flex flex-wrap justify-center gap-6">
-    <!-- Infantiles: Primera, Segunda, Tercera -->
-    <a href="{% url 'serie_primera_infantil' %}" class="group">
-        <div class="bg-gray-900 bg-opacity-90 border-2 border-purple-600 rounded-xl shadow-lg p-6 w-56 flex flex-col items-center hover:scale-105 hover:border-yellow-400 transition-all duration-200">
-            <span class="material-icons text-blue-400 text-4xl mb-2 group-hover:animate-bounce">child_care</span>
-            <span class="text-lg font-bold text-purple-200 mb-1">Primera Infantil</span>
+<section class="py-12 bg-gradient-to-b from-gray-900 to-gray-800">
+    <div class="container mx-auto px-4">
+        <div class="flex flex-wrap justify-center gap-8">
+            <!-- Infantiles: Primera, Segunda, Tercera -->
+            <a href="{% url 'serie_primera_infantil' %}" class="group">
+                <div class="relative bg-gray-800 bg-opacity-95 border-2 border-blue-500 rounded-2xl shadow-xl p-8 w-64 flex flex-col items-center transform transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:border-blue-300">
+                    <div class="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <span class="material-icons text-blue-400 text-5xl mb-4 group-hover:animate-pulse">sports_soccer</span>
+                    <h3 class="text-xl font-semibold text-white tracking-tight">Primera Infantil</h3>
+                    <p class="text-sm text-gray-300 mt-2">Competición para los más jóvenes talentos</p>
+                </div>
+            </a>
+            <a href="{% url 'serie_segunda_infantil' %}" class="group">
+                <div class="relative bg-gray-800 bg-opacity-95 border-2 border-green-500 rounded-2xl shadow-xl p-8 w-64 flex flex-col items-center transform transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:border-green-300">
+                    <div class="absolute inset-0 bg-gradient-to-br from-green-500/20 to-teal-500/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <span class="material-icons text-green-400 text-5xl mb-4 group-hover:animate-pulse">sports_soccer</span>
+                    <h3 class="text-xl font-semibold text-white tracking-tight">Segunda Infantil</h3>
+                    <p class="text-sm text-gray-300 mt-2">Desarrollo de habilidades en equipo</p>
+                </div>
+            </a>
+            <a href="{% url 'serie_tercera_infantil' %}" class="group">
+                <div class="relative bg-gray-800 bg-opacity-95 border-2 border-yellow-500 rounded-2xl shadow-xl p-8 w-64 flex flex-col items-center transform transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:border-yellow-300">
+                    <div class="absolute inset-0 bg-gradient-to-br from-yellow-500/20 to-orange-500/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <span class="material-icons text-yellow-400 text-5xl mb-4 group-hover:animate-pulse">sports_soccer</span>
+                    <h3 class="text-xl font-semibold text-white tracking-tight">Tercera Infantil</h3>
+                    <p class="text-sm text-gray-300 mt-2">Iniciación al fútbol competitivo</p>
+                </div>
+            </a>
+            <!-- Juvenil -->
+            <a href="{% url 'serie_juvenil' %}" class="group">
+                <div class="relative bg-gray-800 bg-opacity-95 border-2 border-indigo-500 rounded-2xl shadow-xl p-8 w-64 flex flex-col items-center transform transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:border-indigo-300">
+                    <div class="absolute inset-0 bg-gradient-to-br from-indigo-500/20 to-blue-500/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <span class="material-icons text-indigo-400 text-5xl mb-4 group-hover:animate-pulse">sports_volleyball</span>
+                    <h3 class="text-xl font-semibold text-white tracking-tight">Juvenil</h3>
+                    <p class="text-sm text-gray-300 mt-2">Preparación para el siguiente nivel</p>
+                </div>
+            </a>
+            <!-- Adultos -->
+            <a href="{% url 'serie_honor' %}" class="group">
+                <div class="relative bg-gray-800 bg-opacity-95 border-2 border-red-500 rounded-2xl shadow-xl p-8 w-64 flex flex-col items-center transform transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:border-red-300">
+                    <div class="absolute inset-0 bg-gradient-to-br from-red-500/20 to-pink-500/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <span class="material-icons text-red-400 text-5xl mb-4 group-hover:animate-pulse">person</span>
+                    <h3 class="text-xl font-semibold text-white tracking-tight">1ra Adultos Honor</h3>
+                    <p class="text-sm text-gray-300 mt-2">Élite del fútbol adulto</p>
+                </div>
+            </a>
+            <a href="{% url 'serie_segunda_adultos' %}" class="group">
+                <div class="relative bg-gray-800 bg-opacity-95 border-2 border-teal-500 rounded-2xl shadow-xl p-8 w-64 flex flex-col items-center transform transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:border-teal-300">
+                    <div class="absolute inset-0 bg-gradient-to-br from-teal-500/20 to-cyan-500/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <span class="material-icons text-teal-400 text-5xl mb-4 group-hover:animate-pulse">person</span>
+                    <h3 class="text-xl font-semibold text-white tracking-tight">2da Adultos</h3>
+                    <p class="text-sm text-gray-300 mt-2">Competencia de alto nivel</p>
+                </div>
+            </a>
+            <!-- Seniors -->
+            <a href="{% url 'serie_seniors' %}" class="group">
+                <div class="relative bg-gray-800 bg-opacity-95 border-2 border-orange-500 rounded-2xl shadow-xl p-8 w-64 flex flex-col items-center transform transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:border-orange-300">
+                    <div class="absolute inset-0 bg-gradient-to-br from-orange-500/20 to-amber-500/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <span class="material-icons text-orange-400 text-5xl mb-4 group-hover:animate-pulse">person_4</span>
+                    <h3 class="text-xl font-semibold text-white tracking-tight">Seniors</h3>
+                    <p class="text-sm text-gray-300 mt-2">Experiencia y pasión</p>
+                </div>
+            </a>
+            <a href="{% url 'serie_super_seniors' %}" class="group">
+                <div class="relative bg-gray-800 bg-opacity-95 border-2 border-amber-500 rounded-2xl shadow-xl p-8 w-64 flex flex-col items-center transform transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:border-amber-300">
+                    <div class="absolute inset-0 bg-gradient-to-br from-amber-500/20 to-yellow-500/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <span class="material-icons text-amber-400 text-5xl mb-4 group-hover:animate-pulse">person_4</span>
+                    <h3 class="text-xl font-semibold text-white tracking-tight">Super Seniors</h3>
+                    <p class="text-sm text-gray-300 mt-2">Leyendas del juego</p>
+                </div>
+            </a>
+            <!-- Femenino -->
+            <a href="{% url 'serie_femenino' %}" class="group">
+                <div class="relative bg-gray-800 bg-opacity-95 border-2 border-pink-500 rounded-2xl shadow-xl p-8 w-64 flex flex-col items-center transform transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:border-pink-300">
+                    <div class="absolute inset-0 bg-gradient-to-br from-pink-500/20 to-rose-500/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <span class="material-icons text-pink-400 text-5xl mb-4 group-hover:animate-pulse">female</span>
+                    <h3 class="text-xl font-semibold text-white tracking-tight">Femenino</h3>
+                    <p class="text-sm text-gray-300 mt-2">Fuerza y talento femenino</p>
+                </div>
+            </a>
         </div>
-    </a>
-    <a href="{% url 'serie_segunda_infantil' %}" class="group">
-        <div class="bg-gray-900 bg-opacity-90 border-2 border-purple-600 rounded-xl shadow-lg p-6 w-56 flex flex-col items-center hover:scale-105 hover:border-yellow-400 transition-all duration-200">
-            <span class="material-icons text-green-400 text-4xl mb-2 group-hover:animate-bounce">child_care</span>
-            <span class="text-lg font-bold text-purple-200 mb-1">Segunda Infantil</span>
-        </div>
-    </a>
-    <a href="{% url 'serie_tercera_infantil' %}" class="group">
-        <div class="bg-gray-900 bg-opacity-90 border-2 border-purple-600 rounded-xl shadow-lg p-6 w-56 flex flex-col items-center hover:scale-105 hover:border-yellow-400 transition-all duration-200">
-            <span class="material-icons text-yellow-400 text-4xl mb-2 group-hover:animate-bounce">child_care</span>
-            <span class="text-lg font-bold text-purple-200 mb-1">Tercera Infantil</span>
-        </div>
-    </a>
-    <!-- Juvenil -->
-    <a href="{% url 'serie_juvenil' %}" class="group">
-        <div class="bg-gray-900 bg-opacity-90 border-2 border-blue-600 rounded-xl shadow-lg p-6 w-56 flex flex-col items-center hover:scale-105 hover:border-yellow-400 transition-all duration-200">
-            <span class="material-icons text-blue-400 text-4xl mb-2 group-hover:animate-bounce">face_6</span>
-            <span class="text-lg font-bold text-blue-200 mb-1">Juvenil</span>
-        </div>
-    </a>
-    <!-- Adultos -->
-    <a href="{% url 'serie_honor' %}" class="group">
-        <div class="bg-gray-900 bg-opacity-90 border-2 border-red-600 rounded-xl shadow-lg p-6 w-56 flex flex-col items-center hover:scale-105 hover:border-yellow-400 transition-all duration-200">
-            <span class="material-icons text-green-400 text-4xl mb-2 group-hover:animate-bounce">person</span>
-            <span class="text-lg font-bold text-red-200 mb-1">1ra Adultos Honor</span>
-        </div>
-    </a>
-    <a href="{% url 'serie_segunda_adultos' %}" class="group">
-        <div class="bg-gray-900 bg-opacity-90 border-2 border-indigo-600 rounded-xl shadow-lg p-6 w-56 flex flex-col items-center hover:scale-105 hover:border-yellow-400 transition-all duration-200">
-            <span class="material-icons text-indigo-400 text-4xl mb-2 group-hover:animate-bounce">person</span>
-            <span class="text-lg font-bold text-indigo-200 mb-1">2da Adultos</span>
-        </div>
-    </a>
-    <!-- Seniors -->
-    <a href="{% url 'serie_seniors' %}" class="group">
-        <div class="bg-gray-900 bg-opacity-90 border-2 border-orange-600 rounded-xl shadow-lg p-6 w-56 flex flex-col items-center hover:scale-105 hover:border-yellow-400 transition-all duration-200">
-            <span class="material-icons text-orange-400 text-4xl mb-2 group-hover:animate-bounce">person_4</span>
-            <span class="text-lg font-bold text-orange-200 mb-1">Seniors</span>
-        </div>
-    </a>
-    <a href="{% url 'serie_super_seniors' %}" class="group">
-        <div class="bg-gray-900 bg-opacity-90 border-2 border-orange-400 rounded-xl shadow-lg p-6 w-56 flex flex-col items-center hover:scale-105 hover:border-yellow-400 transition-all duration-200">
-            <span class="material-icons text-orange-300 text-4xl mb-2 group-hover:animate-bounce">person_4</span>
-            <span class="text-lg font-bold text-orange-100 mb-1">Super Seniors</span>
-        </div>
-    </a>
-    <!-- Femenino -->
-    <a href="{% url 'serie_femenino' %}" class="group">
-        <div class="bg-gray-900 bg-opacity-90 border-2 border-pink-600 rounded-xl shadow-lg p-6 w-56 flex flex-col items-center hover:scale-105 hover:border-yellow-400 transition-all duration-200">
-            <span class="material-icons text-pink-400 text-4xl mb-2 group-hover:animate-bounce">female</span>
-            <span class="text-lg font-bold text-pink-200 mb-1">Femenino</span>
-        </div>
-    </a>
-</div>
+    </div>
 </section>
 </main>
 <footer class="text-center mt-12 py-4 border-t border-blue-700">

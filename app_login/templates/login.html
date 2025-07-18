@@ -10,49 +10,94 @@
       rel="stylesheet"
       as="style"
       onload="this.rel='stylesheet'"
-      href="https://fonts.googleapis.com/css2?display=swap&amp;family=Inter%3Awght%40400%3B500%3B700%3B900&amp;family=Noto+Sans%3Awght%40400%3B500%3B700%3B900"
+      href="https://fonts.googleapis.com/css2?display=swap&family=Inter%3Awght%40400%3B500%3B700%3B900&family=Noto+Sans%3Awght%40400%3B500%3B700%3B900"
     />
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <style>
       body {
-        background: linear-gradient(135deg, #f8f9fc 0%, #ececec 100%);
+        background: linear-gradient(135deg, rgba(2, 48, 71, 0.9) 0%, rgba(33, 94, 33, 0.9) 100%);
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+      }
+      .logo-container {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, transparent 70%);
+        border-radius: 50%;
+        padding: 12px;
+        transition: transform 0.3s ease-in-out;
+      }
+      .logo-container:hover {
+        transform: scale(1.05);
+      }
+      .logo {
+        filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.4));
+      }
+      .form-container {
+        background: rgba(30, 30, 30, 0.95);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 1.5rem;
+        color: #e5e7eb;
+      }
+      .login-button {
+        background: linear-gradient(90deg, #023047, #2e7d32);
+        transition: all 0.3s ease;
+      }
+      .login-button:hover {
+        background: linear-gradient(90deg, #011c2b, #1b5e20);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 14px rgba(0, 0, 0, 0.25);
+      }
+      .input-field {
+        border-color: #4b5e6a;
+        background: #2d2d2d;
+        color: #e5e7eb;
+        transition: all 0.3s ease;
+      }
+      .input-field:focus {
+        border-color: #2e7d32;
+        ring-color: #2e7d32;
+      }
+      .input-label {
+        color: #d1d5db;
+      }
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      .form-container {
+        animation: fadeIn 0.5s ease-in-out;
       }
     </style>
   </head>
-  <body class="flex flex-col min-h-screen" style='font-family: Inter, "Noto Sans", sans-serif;'>
-    <header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-b-[#e7ebf3] px-4 py-3 md:px-10 bg-white shadow-sm">
-      <div class="flex items-center gap-4 text-[#0e121b]">
-        <!-- Logo eliminado del header -->
+  <body class="flex flex-col min-h-screen items-center justify-center" style='font-family: Inter, "Noto Sans", sans-serif;'>
+    <div class="form-container p-8 shadow-2xl w-full max-w-md">
+      <!-- Logo centered with enhanced styling -->
+      <div class="logo-container">
+        <img src="{% static 'img/anfa.png' %}" alt="Logo ANFA Villarrica" loading="lazy" class="logo h-40 md:h-44 mx-auto mb-8 mt-2">
       </div>
-    </header>
-    <div class="flex flex-col items-center justify-center flex-1 px-4">
-      <div class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md border border-[#d1d5db]">
-        <!-- Logo centrado y grande dentro del recuadro del formulario -->
-        <img src="{% static 'img/logo-anfa-villarrica.png' %}" alt="Logo ANFA Villarrica" loading="lazy" class="h-28 md:h-36 drop-shadow-lg mx-auto mb-6 mt-2">
-        <h1 class="text-2xl font-extrabold mb-6 text-center text-[#b91c1c]">Iniciar sesión</h1>
-        <form method="post" action="{% url 'login' %}">
-          {% csrf_token %}
-          <div class="mb-5">
-            <label for="username" class="block text-sm font-semibold text-[#222] mb-1">Usuario</label>
-            <input type="text" name="username" id="username" class="mt-1 block w-full rounded-lg border border-[#b91c1c] bg-[#f9fafb] shadow-sm focus:border-[#b91c1c] focus:ring-[#b91c1c] sm:text-sm px-3 py-2 transition text-[#222]" autocomplete="username">
-          </div>
-          <div class="mb-6">
-            <label for="password" class="block text-sm font-semibold text-[#222] mb-1">Contraseña</label>
-            <input type="password" name="password" id="password" class="mt-1 block w-full rounded-lg border border-[#b91c1c] bg-[#f9fafb] shadow-sm focus:border-[#b91c1c] focus:ring-[#b91c1c] sm:text-sm px-3 py-2 transition text-[#222]" autocomplete="current-password">
-          </div>
-          <div class="flex justify-center">
-            <button type="submit" class="bg-[#b91c1c] hover:bg-[#991b1b] text-white font-semibold px-6 py-2 rounded-lg shadow transition">Iniciar sesión</button>
-          </div>
-        </form>
-        {% if error %}
-        <p class="mt-4 text-[#b91c1c] text-sm text-center">{{ error }}</p>
-        {% endif %}
-      </div>
+      <h1 class="text-3xl font-extrabold mb-8 text-center text-[#2e7d32] tracking-tight">Iniciar sesión</h1>
+      <form method="post" action="{% url 'login' %}">
+        {% csrf_token %}
+        <div class="mb-6">
+          <label for="username" class="input-label block text-sm font-semibold mb-2">Usuario</label>
+          <input type="text" name="username" id="username" class="input-field mt-1 block w-full rounded-lg border shadow-sm focus:border-[#2e7d32] focus:ring-[#2e7d32] sm:text-sm px-4 py-3 transition" autocomplete="username">
+        </div>
+        <div class="mb-8">
+          <label for="password" class="input-label block text-sm font-semibold mb-2">Contraseña</label>
+          <input type="password" name="password" id="password" class="input-field mt-1 block w-full rounded-lg border shadow-sm focus:border-[#2e7d32] focus:ring-[#2e7d32] sm:text-sm px-4 py-3 transition" autocomplete="current-password">
+        </div>
+        <div class="flex justify-center">
+          <button type="submit" class="login-button text-white font-semibold px-8 py-3 rounded-lg shadow transition">Iniciar sesión</button>
+        </div>
+      </form>
+      {% if error %}
+      <p class="mt-6 text-[#2e7d32] text-sm text-center">{{ error }}</p>
+      {% endif %}
     </div>
   </body>
 </html>
-
-
-
-
-
