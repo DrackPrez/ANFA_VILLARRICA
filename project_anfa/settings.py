@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-bd!q_oz_0pu)h#x&f=bhb@@d+1$1d&2=h83&m2s##9%2r*re#&
 # SECURITY WARNING: don't run with debug turned on in production!
 
 
-DEBUG = True # Esto es una buena práctica para controlar DEBUG
+DEBUG = False # Esto es una buena práctica para controlar DEBUG
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'anfavillarrica-production.up.railway.app']
 CSRF_TRUSTED_ORIGINS = [
