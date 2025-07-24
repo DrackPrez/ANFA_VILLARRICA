@@ -1037,6 +1037,8 @@ let novedadesItemsPerView = 1;
 // Inicializar carrusel de novedades
 function initNovedadesCarousel() {
     const carousel = document.getElementById('novedades-carousel');
+    if (!carousel) return;
+    
     const items = carousel.children;
     novedadesTotalItems = items.length;
     
@@ -1048,12 +1050,17 @@ function initNovedadesCarousel() {
     // Crear indicadores
     createNovedadesIndicators();
     
-    // Iniciar auto-slide
-    startNovedadesAutoSlide();
+    // Actualizar controles iniciales
+    updateNovedadesCarousel();
     
-    // Pausar auto-slide al hover
-    carousel.addEventListener('mouseenter', stopNovedadesAutoSlide);
-    carousel.addEventListener('mouseleave', startNovedadesAutoSlide);
+    // Iniciar auto-slide solo si hay suficientes elementos
+    if (novedadesTotalItems > novedadesItemsPerView) {
+        startNovedadesAutoSlide();
+        
+        // Pausar auto-slide al hover
+        carousel.addEventListener('mouseenter', stopNovedadesAutoSlide);
+        carousel.addEventListener('mouseleave', startNovedadesAutoSlide);
+    }
     
     // Actualizar en resize
     window.addEventListener('resize', () => {
@@ -1096,6 +1103,8 @@ function createNovedadesIndicators() {
 
 function updateNovedadesCarousel() {
     const carousel = document.getElementById('novedades-carousel');
+    if (!carousel) return;
+    
     const itemWidth = 100 / novedadesItemsPerView;
     const translateX = -(novedadesCurrentIndex * itemWidth);
     
@@ -1114,14 +1123,20 @@ function updateNovedadesCarousel() {
     const nextBtn = document.getElementById('novedadesNextBtn');
     const maxIndex = Math.max(0, novedadesTotalItems - novedadesItemsPerView);
     
-    if (maxIndex === 0) {
-        prevBtn.style.display = 'none';
-        nextBtn.style.display = 'none';
+    if (maxIndex === 0 || novedadesTotalItems <= novedadesItemsPerView) {
+        // Ocultar botones si no hay suficientes elementos para navegar
+        if (prevBtn) prevBtn.style.display = 'none';
+        if (nextBtn) nextBtn.style.display = 'none';
     } else {
-        prevBtn.style.display = 'block';
-        nextBtn.style.display = 'block';
-        prevBtn.style.opacity = novedadesCurrentIndex === 0 ? '0.5' : '0.8';
-        nextBtn.style.opacity = novedadesCurrentIndex >= maxIndex ? '0.5' : '0.8';
+        // Mostrar botones y actualizar su opacidad
+        if (prevBtn) {
+            prevBtn.style.display = 'block';
+            prevBtn.style.opacity = novedadesCurrentIndex === 0 ? '0.5' : '0.8';
+        }
+        if (nextBtn) {
+            nextBtn.style.display = 'block';
+            nextBtn.style.opacity = novedadesCurrentIndex >= maxIndex ? '0.5' : '0.8';
+        }
     }
 }
 
