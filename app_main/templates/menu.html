@@ -16,7 +16,7 @@
         top: 0;
         left: 0;
         right: 0;
-        z-index: 1000;
+        z-index: 100;
         backdrop-filter: blur(10px);
         background: rgba(17, 24, 39, 0.95);
         border-bottom: 1px solid rgba(220, 38, 38, 0.3);
@@ -551,8 +551,8 @@
 </footer>
 </div>
 <!-- Modal para Agregar/Editar Novedad -->
-<div id="novedadModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-gray-800 rounded-lg max-w-md w-full max-h-90vh overflow-y-auto">
+<div id="novedadModal" class="fixed inset-0 bg-black bg-opacity-70 z-[9999] hidden flex items-center justify-center p-2 sm:p-4">
+    <div class="bg-gray-800 rounded-lg w-full max-w-md sm:max-w-lg md:max-w-xl max-h-[90vh] overflow-y-auto mx-2 sm:mx-0">
         <div class="flex justify-between items-center p-4 border-b border-gray-700">
             <h3 id="novedadModalTitle" class="text-lg font-semibold text-white">Agregar Novedad</h3>
             <button onclick="closeNovedadModal()" class="text-gray-400 hover:text-white">
@@ -610,10 +610,10 @@
 </div>
 
 <!-- Modal para Galería de Imágenes de Novedad -->
-<div id="novedadGalleryModal" class="fixed inset-0 bg-black bg-opacity-90 z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-gray-800 rounded-lg max-w-5xl w-full max-h-95vh overflow-hidden shadow-2xl">
+<div id="novedadGalleryModal" class="fixed inset-0 bg-black bg-opacity-90 z-[9999] hidden flex items-center justify-center p-2 sm:p-4">
+    <div class="bg-gray-800 rounded-lg w-full max-w-5xl max-h-[95vh] overflow-hidden shadow-2xl flex flex-col">
         <!-- Header del modal -->
-        <div class="flex justify-between items-center p-4 border-b border-gray-700 bg-gray-900">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center p-3 sm:p-4 border-b border-gray-700 bg-gray-900 gap-2">
             <div class="flex-1">
                 <h3 id="galleryTitle" class="text-xl font-semibold text-white mb-1"></h3>
                 <p id="galleryDate" class="text-sm text-gray-400"></p>
@@ -630,9 +630,9 @@
         </div>
         
         <!-- Contenido del modal -->
-        <div class="flex flex-col lg:flex-row h-full max-h-80vh">
+        <div class="flex flex-col lg:flex-row h-full max-h-[80vh]">
             <!-- Galería de imágenes -->
-            <div class="flex-1 relative bg-black">
+            <div class="flex-1 relative bg-black min-h-[220px]">
                 <div id="imageContainer" class="h-full flex items-center justify-center relative">
                     <img id="currentImage" src="" alt="" class="max-w-full max-h-full object-contain">
                     
@@ -657,7 +657,7 @@
             </div>
             
             <!-- Panel de información -->
-            <div class="lg:w-80 bg-gray-800 p-6 overflow-y-auto">
+            <div class="lg:w-80 w-full bg-gray-800 p-4 sm:p-6 overflow-y-auto">
                 <h4 class="text-lg font-semibold text-white mb-3">Descripción</h4>
                 <p id="galleryDescription" class="text-gray-300 text-sm leading-relaxed"></p>
                 
@@ -692,7 +692,15 @@ function openAddNovedadModal() {
     document.getElementById('imagenes-preview').classList.add('hidden');
     document.getElementById('existing-images').classList.add('hidden');
     document.getElementById('preview-container').innerHTML = '';
+    
+    // Ocultar el header
+    const header = document.querySelector('.sticky-header');
+    if (header) {
+        header.style.display = 'none';
+    }
+    
     document.getElementById('novedadModal').classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
 }
 
 function openEditNovedadModal(novedadId) {
@@ -729,7 +737,15 @@ function openEditNovedadModal(novedadId) {
             }
             
             document.getElementById('imagenes-preview').classList.add('hidden');
+            
+            // Ocultar el header
+            const header = document.querySelector('.sticky-header');
+            if (header) {
+                header.style.display = 'none';
+            }
+            
             document.getElementById('novedadModal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
         }
     })
     .catch(error => {
@@ -739,7 +755,14 @@ function openEditNovedadModal(novedadId) {
 }
 
 function closeNovedadModal() {
+    // Mostrar el header nuevamente
+    const header = document.querySelector('.sticky-header');
+    if (header) {
+        header.style.display = 'flex';
+    }
+    
     document.getElementById('novedadModal').classList.add('hidden');
+    document.body.style.overflow = 'auto';
 }
 
 function deleteNovedad(novedadId) {
@@ -879,11 +902,23 @@ function openNovedadGallery(id, titulo, descripcion, fecha, instagramUrl, imagen
         setupGalleryNavigation();
     }
     
+    // Ocultar el header
+    const header = document.querySelector('.sticky-header');
+    if (header) {
+        header.style.display = 'none';
+    }
+    
     document.getElementById('novedadGalleryModal').classList.remove('hidden');
     document.body.style.overflow = 'hidden'; // Prevenir scroll del fondo
 }
 
 function closeNovedadGallery() {
+    // Mostrar el header nuevamente
+    const header = document.querySelector('.sticky-header');
+    if (header) {
+        header.style.display = 'flex';
+    }
+    
     document.getElementById('novedadGalleryModal').classList.add('hidden');
     document.body.style.overflow = 'auto'; // Restaurar scroll
 }
@@ -982,6 +1017,12 @@ document.getElementById('novedadGalleryModal').addEventListener('click', functio
 
 // Limpiar event listeners al cerrar
 function closeNovedadGallery() {
+    // Mostrar el header nuevamente
+    const header = document.querySelector('.sticky-header');
+    if (header) {
+        header.style.display = 'flex';
+    }
+    
     document.getElementById('novedadGalleryModal').classList.add('hidden');
     document.body.style.overflow = 'auto';
     document.removeEventListener('keydown', handleGalleryKeyboard);
