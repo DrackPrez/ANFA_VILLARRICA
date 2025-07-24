@@ -11,7 +11,6 @@ from collections import defaultdict
 from datetime import date
 from django.urls import reverse
 
-@login_required
 def menu(request):
     hoy = date.today()
     proximos_partidos = []

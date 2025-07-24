@@ -1,9 +1,7 @@
-from django.shortcuts import render
-
-# Create your views here.
 from django.shortcuts import render, redirect
 from django.views.decorators.cache import never_cache
 from django.contrib.auth import logout as auth_logout, authenticate, login as auth_login
+from django.contrib import messages
 
 # Create your views here.
 @never_cache
@@ -20,11 +18,12 @@ def login(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             auth_login(request, user)
+            # Redirigir al menú después del login exitoso
             return redirect('menu')
         else:
-            return render(request, 'login.html', {'error': 'Credenciales Invalidas'})
+            messages.error(request, 'Credenciales inválidas')
     return render(request, 'login.html')
 
 def logout(request):
     auth_logout(request)
-    return redirect('login')
+    return redirect('menu')
