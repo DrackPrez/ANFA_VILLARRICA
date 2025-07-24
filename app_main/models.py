@@ -1018,5 +1018,62 @@ class Tablero_SerieTerceraInfantil(models.Model):
         self.Pts = (self.PG * 3) + self.PE
         self.save()
 
+# --- NUEVO: Modelo para Novedades/Noticias ---
+
+class Novedad(models.Model):
+    titulo = models.CharField(max_length=200)
+    descripcion = models.TextField()
+    url_instagram = models.URLField(blank=True, null=True, help_text="URL del post de Instagram relacionado")
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
+    fecha_actualizacion = models.DateTimeField(auto_now=True)
+    activo = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ['-fecha_creacion']
+        verbose_name = "Novedad"
+        verbose_name_plural = "Novedades"
+
+    def __str__(self):
+        return self.titulo
+
+    def get_instagram_embed_url(self):
+        """Convierte URL de Instagram en URL para embed"""
+        if self.url_instagram:
+            if '/p/' in self.url_instagram:
+                return self.url_instagram.replace('/p/', '/p/').rstrip('/') + '/embed/'
+            elif '/reel/' in self.url_instagram:
+                return self.url_instagram.replace('/reel/', '/p/').rstrip('/') + '/embed/'
+        return None
+
+    def get_main_image(self):
+        """Obtiene la primera imagen como imagen principal"""
+        first_image = self.imagenes.first()
+        return first_image.imagen if first_image else None
+
+class NovedadImagen(models.Model):
+    novedad = models.ForeignKey(Novedad, on_delete=models.CASCADE, related_name='imagenes')
+    imagen = models.ImageField(upload_to='novedades/')
+    orden = models.PositiveSmallIntegerField(default=0)
+    fecha_subida = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['orden', 'fecha_subida']
+        verbose_name = "Imagen de Novedad"
+        verbose_name_plural = "Imágenes de Novedades"
+
+    def __str__(self):
+        return f"Imagen {self.orden + 1} - {self.novedad.titulo}"
+
+    def delete(self, *args, **kwargs):
+        """Override delete to remove the physical image file"""
+        if self.imagen and self.imagen.name:
+            try:
+                import os
+                if os.path.isfile(self.imagen.path):
+                    os.remove(self.imagen.path)
+            except Exception as e:
+                print(f"Error al eliminar archivo {self.imagen.path}: {e}")
+        super().delete(*args, **kwargs)
+
 
 

@@ -20,5 +20,10 @@ urlpatterns = [
     path('serie_juvenil/', views.serie_juvenil, name='serie_juvenil'),
     path('serie_primera_infantil/', views.serie_primera_infantil, name='serie_primera_infantil'),
     path('serie_tercera_infantil/', views.serie_tercera_infantil, name='serie_tercera_infantil'),
+    # URLs para novedades
+    path('novedades/', views.novedades, name='novedades'),
+    path('novedades/add/', views.novedad_add, name='novedad_add'),
+    path('novedades/edit/<int:novedad_id>/', views.novedad_edit, name='novedad_edit'),
+    path('novedades/delete/<int:novedad_id>/', views.novedad_delete, name='novedad_delete'),
 ]
 

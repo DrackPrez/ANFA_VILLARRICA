@@ -5,11 +5,13 @@ from .models import SerieSeniors, Tablero_SerieSeniors, SerieSuperSeniors, Table
 from .models import SerieSegundaInfantil, Tablero_SerieSegundaInfantil
 from .models import SerieJuvenil, Tablero_SerieJuvenil,SeriePrimeraInfantil,Tablero_SeriePrimeraInfantil
 from .models import SerieTerceraInfantil, Tablero_SerieTerceraInfantil
+from .models import Novedad, NovedadImagen
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from collections import defaultdict
 from datetime import date
 from django.urls import reverse
+from django.http import JsonResponse
 
 def menu(request):
     hoy = date.today()
@@ -49,7 +51,14 @@ def menu(request):
             })
 
     proximos_partidos.sort(key=lambda x: (x['fecha'], x['hora'] or ''))
-    return render(request, 'menu.html', {'proximos_partidos': proximos_partidos})
+    
+    # Obtener más novedades para el carrusel (mostrar hasta 10)
+    novedades_recientes = Novedad.objects.filter(activo=True)[:10]
+    
+    return render(request, 'menu.html', {
+        'proximos_partidos': proximos_partidos,
+        'novedades_recientes': novedades_recientes
+    })
 
 
 def tercera_infantil(request):
@@ -1007,6 +1016,7 @@ def serie_segunda_infantil(request):
             partido.cancha = request.POST.get('edit_cancha', '')
             partido.turno = request.POST.get('edit_turno', '')
             partido.libre = request.POST.get('edit_libre', '')
+            # Asegura goles válidos
             goles_local = request.POST.get('goles_local_{}'.format(partido_id), partido.goles_local)
             goles_visita = request.POST.get('goles_visita_{}'.format(partido_id), partido.goles_visita)
             partido.goles_local = int(goles_local) if str(goles_local).isdigit() else 0
@@ -1507,3 +1517,108 @@ def serie_tercera_infantil(request):
         'estado_choices': SerieTerceraInfantil.ESTADO_PARTIDO_CHOICES,
         'tablero_general': tablero_general,
     })
+
+# --- NUEVAS VISTAS PARA NOVEDADES ---
+
+def novedades(request):
+    novedades = Novedad.objects.filter(activo=True).prefetch_related('imagenes').order_by('-fecha_creacion')
+    return render(request, 'novedades.html', {'novedades': novedades})
+
+@login_required
+def novedad_add(request):
+    if request.method == 'POST':
+        titulo = request.POST.get('titulo')
+        descripcion = request.POST.get('descripcion')
+        url_instagram = request.POST.get('url_instagram', '')
+        
+        # Crear la novedad
+        novedad = Novedad.objects.create(
+            titulo=titulo,
+            descripcion=descripcion,
+            url_instagram=url_instagram
+        )
+        
+        # Manejar múltiples imágenes
+        imagenes = request.FILES.getlist('imagenes')
+        if imagenes:
+            for i, imagen in enumerate(imagenes[:5]):  # Limitar a 5 imágenes
+                NovedadImagen.objects.create(
+                    novedad=novedad,
+                    imagen=imagen,
+                    orden=i
+                )
+        
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            return JsonResponse({'success': True, 'message': 'Novedad agregada exitosamente'})
+        return redirect('menu')
+    
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return JsonResponse({'error': 'Método no permitido'}, status=405)
+    return redirect('menu')
+
+@login_required
+def novedad_edit(request, novedad_id):
+    novedad = get_object_or_404(Novedad, id=novedad_id)
+    
+    if request.method == 'POST':
+        novedad.titulo = request.POST.get('titulo', novedad.titulo)
+        novedad.descripcion = request.POST.get('descripcion', novedad.descripcion)
+        novedad.url_instagram = request.POST.get('url_instagram', '')
+        novedad.save()
+        
+        # Manejar nuevas imágenes
+        imagenes = request.FILES.getlist('imagenes')
+        if imagenes:
+            # Eliminar imágenes existentes si se suben nuevas
+            novedad.imagenes.all().delete()
+            # Crear nuevas imágenes
+            for i, imagen in enumerate(imagenes[:5]):  # Limitar a 5 imágenes
+                NovedadImagen.objects.create(
+                    novedad=novedad,
+                    imagen=imagen,
+                    orden=i
+                )
+        
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            return JsonResponse({'success': True, 'message': 'Novedad actualizada exitosamente'})
+        return redirect('menu')
+    
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        imagenes_urls = [img.imagen.url for img in novedad.imagenes.all()]
+        return JsonResponse({
+            'novedad': {
+                'id': novedad.id,
+                'titulo': novedad.titulo,
+                'descripcion': novedad.descripcion,
+                'url_instagram': novedad.url_instagram or '',
+                'imagenes_urls': imagenes_urls
+            }
+        })
+    return redirect('menu')
+
+@login_required
+def novedad_delete(request, novedad_id):
+    novedad = get_object_or_404(Novedad, id=novedad_id)
+    
+    if request.method == 'POST':
+        # Eliminar las imágenes físicas del servidor antes de eliminar la novedad
+        for imagen in novedad.imagenes.all():
+            if imagen.imagen and imagen.imagen.name:
+                # Eliminar el archivo físico del sistema
+                try:
+                    import os
+                    if os.path.isfile(imagen.imagen.path):
+                        os.remove(imagen.imagen.path)
+                except Exception as e:
+                    # Si hay error al eliminar el archivo, continuar con la eliminación lógica
+                    print(f"Error al eliminar archivo {imagen.imagen.path}: {e}")
+        
+        # Marcar la novedad como inactiva (eliminación lógica)
+        novedad.activo = False
+        novedad.save()
+        
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            return JsonResponse({'success': True, 'message': 'Novedad eliminada exitosamente'})
+        return redirect('menu')
+    
+    return redirect('menu')

@@ -111,6 +111,135 @@
 </div>
 </section>
 
+<!-- NUEVO: Sección de Novedades -->
+<section class="mb-12 p-6 border-2 border-blue-500 rounded-lg bg-gray-800 bg-opacity-80">
+    <div class="flex justify-between items-center mb-6">
+        <h2 class="text-xl font-semibold text-blue-300 flex items-center gap-2">
+            <span class="material-icons">newspaper</span>
+            NOVEDADES
+        </h2>
+        {% if user.is_authenticated %}
+            <button onclick="openAddNovedadModal()" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-lg shadow transition flex items-center gap-2">
+                <span class="material-icons text-sm">add</span>
+                Agregar Noticia
+            </button>
+        {% endif %}
+    </div>
+    
+    {% if novedades_recientes %}
+        <div class="relative overflow-hidden">
+            <!-- Botones de navegación -->
+            <button id="novedadesPrevBtn" onclick="moveNovedadesCarousel('prev')" class="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-full shadow-lg transition-all duration-300 opacity-80 hover:opacity-100">
+                <span class="material-icons">chevron_left</span>
+            </button>
+            <button id="novedadesNextBtn" onclick="moveNovedadesCarousel('next')" class="absolute right-0 top-1/2 transform -translate-y-1/2 z-10 bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-full shadow-lg transition-all duration-300 opacity-80 hover:opacity-100">
+                <span class="material-icons">chevron_right</span>
+            </button>
+            
+            <!-- Contenedor del carrusel -->
+            <div id="novedades-carousel" class="flex transition-transform duration-500 ease-in-out" style="transform: translateX(0px);">
+                {% for novedad in novedades_recientes %}
+                <div class="flex-none w-full md:w-1/2 lg:w-1/3 px-3">
+                    <div class="bg-gray-900 bg-opacity-90 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 cursor-pointer h-full" onclick="openNovedadGallery({{ novedad.id }}, '{{ novedad.titulo|escapejs }}', '{{ novedad.descripcion|escapejs }}', '{{ novedad.fecha_creacion|date:"d/m/Y" }}', '{{ novedad.url_instagram|default:'' }}', [{% for img in novedad.imagenes.all %}'{{ img.imagen.url }}'{% if not forloop.last %},{% endif %}{% endfor %}])">
+                        {% if novedad.imagenes.exists %}
+                            <div class="h-48 overflow-hidden relative">
+                                {% if novedad.imagenes.count == 1 %}
+                                    <!-- Una sola imagen -->
+                                    {% with novedad.imagenes.first as main_image %}
+                                        <img src="{{ main_image.imagen.url }}" alt="{{ novedad.titulo }}" class="w-full h-full object-cover transition-transform duration-300 hover:scale-110">
+                                    {% endwith %}
+                                {% elif novedad.imagenes.count == 2 %}
+                                    <!-- Dos imágenes en grid 2x1 -->
+                                    <div class="grid grid-cols-2 gap-1 h-full">
+                                        {% for img in novedad.imagenes.all|slice:":2" %}
+                                            <img src="{{ img.imagen.url }}" alt="{{ novedad.titulo }}" class="w-full h-full object-cover transition-transform duration-300 hover:scale-110">
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    <!-- Tres o más imágenes en grid especial -->
+                                    <div class="grid grid-cols-2 gap-1 h-full">
+                                        <!-- Imagen principal (primera) ocupa toda la columna izquierda -->
+                                        {% with novedad.imagenes.first as main_image %}
+                                            <img src="{{ main_image.imagen.url }}" alt="{{ novedad.titulo }}" class="w-full h-full object-cover transition-transform duration-300 hover:scale-110">
+                                        {% endwith %}
+                                        <!-- Columna derecha con hasta 2 imágenes más -->
+                                        <div class="grid grid-rows-2 gap-1 h-full">
+                                            {% for img in novedad.imagenes.all|slice:"1:3" %}
+                                                <div class="relative overflow-hidden">
+                                                    <img src="{{ img.imagen.url }}" alt="{{ novedad.titulo }}" class="w-full h-full object-cover transition-transform duration-300 hover:scale-110">
+                                                    {% if forloop.last and novedad.imagenes.count > 3 %}
+                                                        <!-- Overlay con número de imágenes adicionales -->
+                                                        <div class="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center">
+                                                            <span class="text-white text-lg font-bold">
+                                                                +{{ novedad.imagenes.count|add:"-3" }}
+                                                            </span>
+                                                        </div>
+                                                    {% endif %}
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                {% endif %}
+                                
+                                <!-- Indicador de número total de imágenes -->
+                                {% if novedad.imagenes.count > 1 %}
+                                    <div class="absolute top-2 right-2 bg-black bg-opacity-70 text-white text-xs px-2 py-1 rounded-full flex items-center gap-1">
+                                        <span class="material-icons text-xs">photo_library</span>
+                                        {{ novedad.imagenes.count }}
+                                    </div>
+                                {% endif %}
+                                
+                                <!-- Hover overlay -->
+                                <div class="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-20 transition-all duration-300 flex items-center justify-center">
+                                    <span class="material-icons text-white text-3xl opacity-0 hover:opacity-100 transition-opacity duration-300">fullscreen</span>
+                                </div>
+                            </div>
+                        {% else %}
+                            <div class="h-48 bg-gradient-to-br from-blue-900 to-purple-900 flex items-center justify-center">
+                                <span class="material-icons text-white text-6xl opacity-50">article</span>
+                            </div>
+                        {% endif %}
+                        <div class="p-4">
+                            <h3 class="text-lg font-semibold text-white mb-2 line-clamp-2">{{ novedad.titulo }}</h3>
+                            <p class="text-gray-300 text-sm mb-3 line-clamp-3">{{ novedad.descripcion|truncatewords:20 }}</p>
+                            <div class="flex justify-between items-center text-xs text-gray-400 mb-3">
+                                <span>{{ novedad.fecha_creacion|date:"d/m/Y" }}</span>
+                                {% if novedad.url_instagram %}
+                                    <a href="{{ novedad.url_instagram }}" target="_blank" class="text-pink-400 hover:text-pink-300 flex items-center gap-1" onclick="event.stopPropagation();">
+                                        <span class="material-icons text-sm">camera_alt</span>
+                                        Instagram
+                                    </a>
+                                {% endif %}
+                            </div>
+                            {% if user.is_authenticated %}
+                                <div class="flex gap-2 pt-2 border-t border-gray-700">
+                                    <button onclick="event.stopPropagation(); openEditNovedadModal({{ novedad.id }})" class="flex-1 bg-yellow-600 hover:bg-yellow-700 text-white text-xs px-3 py-1 rounded transition">
+                                        Editar
+                                    </button>
+                                    <button onclick="event.stopPropagation(); deleteNovedad({{ novedad.id }})" class="flex-1 bg-red-600 hover:bg-red-700 text-white text-xs px-3 py-1 rounded transition">
+                                        Eliminar
+                                    </button>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <!-- Indicadores de posición -->
+            <div id="novedades-indicators" class="flex justify-center mt-4 space-x-2">
+                <!-- Los indicadores se generarán dinámicamente -->
+            </div>
+        </div>
+    {% else %}
+        <div class="text-center py-8">
+            <span class="material-icons text-gray-500 text-6xl mb-4">article</span>
+            <p class="text-gray-400">No hay novedades disponibles por el momento.</p>
+        </div>
+    {% endif %}
+</section>
+
 <!-- NUEVO: Próximos Partidos -->
 <section class="mb-12 p-6 border-2 border-yellow-500 rounded-lg bg-gray-800 bg-opacity-80">
     <h2 class="text-xl font-semibold mb-4 text-center text-yellow-300">PRÓXIMOS PARTIDOS</h2>
@@ -421,10 +550,577 @@
 <p class="text-sm text-red-300">© 2025 ANFA Villarrica. Todos los derechos reservados.</p>
 </footer>
 </div>
+<!-- Modal para Agregar/Editar Novedad -->
+<div id="novedadModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-gray-800 rounded-lg max-w-md w-full max-h-90vh overflow-y-auto">
+        <div class="flex justify-between items-center p-4 border-b border-gray-700">
+            <h3 id="novedadModalTitle" class="text-lg font-semibold text-white">Agregar Novedad</h3>
+            <button onclick="closeNovedadModal()" class="text-gray-400 hover:text-white">
+                <span class="material-icons">close</span>
+            </button>
+        </div>
+        <form id="novedadForm" enctype="multipart/form-data" class="p-4 space-y-4">
+            {% csrf_token %}
+            <input type="hidden" id="novedad_id" name="novedad_id">
+            
+            <div>
+                <label for="titulo" class="block text-sm font-medium text-gray-300 mb-2">Título</label>
+                <input type="text" id="titulo" name="titulo" required class="w-full bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+            </div>
+            
+            <div>
+                <label for="descripcion" class="block text-sm font-medium text-gray-300 mb-2">Descripción</label>
+                <textarea id="descripcion" name="descripcion" rows="4" required class="w-full bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"></textarea>
+            </div>
+            
+            <div>
+                <label for="imagenes" class="block text-sm font-medium text-gray-300 mb-2">
+                    Imágenes (máximo 5)
+                    <span class="text-xs text-gray-400">- Puedes seleccionar múltiples imágenes</span>
+                </label>
+                <input type="file" id="imagenes" name="imagenes" accept="image/*" multiple class="w-full bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                <div id="imagenes-preview" class="mt-2 hidden">
+                    <div class="grid grid-cols-2 gap-2" id="preview-container">
+                        <!-- Preview images will be added here -->
+                    </div>
+                </div>
+                <div id="existing-images" class="mt-2 hidden">
+                    <p class="text-sm text-gray-400 mb-2">Imágenes actuales:</p>
+                    <div class="grid grid-cols-2 gap-2" id="existing-container">
+                        <!-- Existing images will be shown here -->
+                    </div>
+                </div>
+            </div>
+            
+            <div>
+                <label for="url_instagram" class="block text-sm font-medium text-gray-300 mb-2">URL de Instagram (opcional)</label>
+                <input type="url" id="url_instagram" name="url_instagram" placeholder="https://www.instagram.com/p/..." class="w-full bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+            </div>
+            
+            <div class="flex gap-3 pt-4">
+                <button type="submit" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition">
+                    <span id="submitButtonText">Guardar</span>
+                </button>
+                <button type="button" onclick="closeNovedadModal()" class="flex-1 bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded-lg transition">
+                    Cancelar
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal para Galería de Imágenes de Novedad -->
+<div id="novedadGalleryModal" class="fixed inset-0 bg-black bg-opacity-90 z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-gray-800 rounded-lg max-w-5xl w-full max-h-95vh overflow-hidden shadow-2xl">
+        <!-- Header del modal -->
+        <div class="flex justify-between items-center p-4 border-b border-gray-700 bg-gray-900">
+            <div class="flex-1">
+                <h3 id="galleryTitle" class="text-xl font-semibold text-white mb-1"></h3>
+                <p id="galleryDate" class="text-sm text-gray-400"></p>
+            </div>
+            <div class="flex items-center gap-3">
+                <a id="galleryInstagramLink" href="#" target="_blank" class="text-pink-400 hover:text-pink-300 flex items-center gap-1 hidden">
+                    <span class="material-icons text-sm">camera_alt</span>
+                    Ver en Instagram
+                </a>
+                <button onclick="closeNovedadGallery()" class="text-gray-400 hover:text-white transition-colors">
+                    <span class="material-icons text-2xl">close</span>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Contenido del modal -->
+        <div class="flex flex-col lg:flex-row h-full max-h-80vh">
+            <!-- Galería de imágenes -->
+            <div class="flex-1 relative bg-black">
+                <div id="imageContainer" class="h-full flex items-center justify-center relative">
+                    <img id="currentImage" src="" alt="" class="max-w-full max-h-full object-contain">
+                    
+                    <!-- Navegación de imágenes -->
+                    <button id="prevButton" onclick="previousImage()" class="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-75 text-white p-2 rounded-full transition-all duration-200 hidden">
+                        <span class="material-icons">chevron_left</span>
+                    </button>
+                    <button id="nextButton" onclick="nextImage()" class="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-75 text-white p-2 rounded-full transition-all duration-200 hidden">
+                        <span class="material-icons">chevron_right</span>
+                    </button>
+                    
+                    <!-- Indicador de imagen currente -->
+                    <div id="imageCounter" class="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black bg-opacity-50 text-white px-3 py-1 rounded-full text-sm hidden">
+                        <span id="currentImageNumber">1</span> / <span id="totalImages">1</span>
+                    </div>
+                </div>
+                
+                <!-- Thumbnails para múltiples imágenes -->
+                <div id="thumbnailContainer" class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2 hidden">
+                    <!-- Los thumbnails se generarán dinámicamente -->
+                </div>
+            </div>
+            
+            <!-- Panel de información -->
+            <div class="lg:w-80 bg-gray-800 p-6 overflow-y-auto">
+                <h4 class="text-lg font-semibold text-white mb-3">Descripción</h4>
+                <p id="galleryDescription" class="text-gray-300 text-sm leading-relaxed"></p>
+                
+                <!-- Información adicional -->
+                <div class="mt-6 pt-4 border-t border-gray-700">
+                    <div class="flex items-center text-sm text-gray-400 mb-2">
+                        <span class="material-icons text-base mr-2">schedule</span>
+                        <span id="galleryFullDate"></span>
+                    </div>
+                    <div id="galleryImageInfo" class="flex items-center text-sm text-gray-400">
+                        <span class="material-icons text-base mr-2">photo_library</span>
+                        <span id="imageCount"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
 function irAPartido(serieUrl, jornadaId, partidoId) {
     // Redirige a la url de la serie con hash de jornada y partido
     window.location.href = serieUrl + '#jornada-' + jornadaId + '-partido-' + partidoId;
 }
+
+// Funciones para manejo de novedades
+function openAddNovedadModal() {
+    document.getElementById('novedadModalTitle').textContent = 'Agregar Novedad';
+    document.getElementById('submitButtonText').textContent = 'Guardar';
+    document.getElementById('novedadForm').reset();
+    document.getElementById('novedad_id').value = '';
+    document.getElementById('imagenes-preview').classList.add('hidden');
+    document.getElementById('existing-images').classList.add('hidden');
+    document.getElementById('preview-container').innerHTML = '';
+    document.getElementById('novedadModal').classList.remove('hidden');
+}
+
+function openEditNovedadModal(novedadId) {
+    fetch(`/novedades/edit/${novedadId}/`, {
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.novedad) {
+            document.getElementById('novedadModalTitle').textContent = 'Editar Novedad';
+            document.getElementById('submitButtonText').textContent = 'Actualizar';
+            document.getElementById('novedad_id').value = data.novedad.id;
+            document.getElementById('titulo').value = data.novedad.titulo;
+            document.getElementById('descripcion').value = data.novedad.descripcion;
+            document.getElementById('url_instagram').value = data.novedad.url_instagram;
+            
+            // Mostrar imágenes existentes
+            const existingContainer = document.getElementById('existing-container');
+            existingContainer.innerHTML = '';
+            
+            if (data.novedad.imagenes_urls && data.novedad.imagenes_urls.length > 0) {
+                data.novedad.imagenes_urls.forEach((url, index) => {
+                    const imgDiv = document.createElement('div');
+                    imgDiv.className = 'relative';
+                    imgDiv.innerHTML = `
+                        <img src="${url}" alt="Imagen ${index + 1}" class="w-full h-20 object-cover rounded">
+                        <div class="absolute top-1 right-1 bg-black bg-opacity-50 text-white text-xs px-1 rounded">${index + 1}</div>
+                    `;
+                    existingContainer.appendChild(imgDiv);
+                });
+                document.getElementById('existing-images').classList.remove('hidden');
+            }
+            
+            document.getElementById('imagenes-preview').classList.add('hidden');
+            document.getElementById('novedadModal').classList.remove('hidden');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error al cargar los datos de la novedad');
+    });
+}
+
+function closeNovedadModal() {
+    document.getElementById('novedadModal').classList.add('hidden');
+}
+
+function deleteNovedad(novedadId) {
+    if (confirm('¿Estás seguro de que deseas eliminar esta novedad?')) {
+        fetch(`/novedades/delete/${novedadId}/`, {
+            method: 'POST',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                alert('Error al eliminar la novedad');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error al eliminar la novedad');
+        });
+    }
+}
+
+// Manejo del formulario de novedades
+document.getElementById('novedadForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
+    const novedadId = document.getElementById('novedad_id').value;
+    const url = novedadId ? `/novedades/edit/${novedadId}/` : '/novedades/add/';
+    
+    fetch(url, {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            closeNovedadModal();
+            location.reload();
+        } else {
+            alert('Error al guardar la novedad: ' + (data.error || 'Error desconocido'));
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error al procesar la solicitud');
+    });
+});
+
+// Preview de múltiples imágenes
+document.getElementById('imagenes').addEventListener('change', function(e) {
+    const files = Array.from(e.target.files);
+    const previewContainer = document.getElementById('preview-container');
+    previewContainer.innerHTML = '';
+    
+    if (files.length > 0) {
+        if (files.length > 5) {
+            alert('Máximo 5 imágenes permitidas. Solo se mostrarán las primeras 5.');
+            // Limitar archivos a 5
+            const limitedFiles = files.slice(0, 5);
+            const dt = new DataTransfer();
+            limitedFiles.forEach(file => dt.items.add(file));
+            e.target.files = dt.files;
+        }
+        
+        files.slice(0, 5).forEach((file, index) => {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const imgDiv = document.createElement('div');
+                imgDiv.className = 'relative';
+                imgDiv.innerHTML = `
+                    <img src="${e.target.result}" alt="Preview ${index + 1}" class="w-full h-20 object-cover rounded">
+                    <div class="absolute top-1 right-1 bg-black bg-opacity-50 text-white text-xs px-1 rounded">${index + 1}</div>
+                `;
+                previewContainer.appendChild(imgDiv);
+            };
+            reader.readAsDataURL(file);
+        });
+        
+        document.getElementById('imagenes-preview').classList.remove('hidden');
+        document.getElementById('existing-images').classList.add('hidden');
+    } else {
+        document.getElementById('imagenes-preview').classList.add('hidden');
+    }
+});
+
+// Cerrar modal al hacer clic fuera
+document.getElementById('novedadModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+        closeNovedadModal();
+    }
+});
+
+// Variables para la galería
+let currentImages = [];
+let currentImageIndex = 0;
+let currentNovedadData = {};
+
+// Funciones para la galería de novedades
+function openNovedadGallery(id, titulo, descripcion, fecha, instagramUrl, imagenes) {
+    currentImages = imagenes;
+    currentImageIndex = 0;
+    currentNovedadData = {
+        id: id,
+        titulo: titulo,
+        descripcion: descripcion,
+        fecha: fecha,
+        instagramUrl: instagramUrl
+    };
+    
+    // Llenar la información del modal
+    document.getElementById('galleryTitle').textContent = titulo;
+    document.getElementById('galleryDate').textContent = fecha;
+    document.getElementById('galleryDescription').textContent = descripcion;
+    document.getElementById('galleryFullDate').textContent = `Publicado el ${fecha}`;
+    document.getElementById('imageCount').textContent = `${imagenes.length} imagen${imagenes.length > 1 ? 's' : ''}`;
+    
+    // Manejar enlace de Instagram
+    const instagramLink = document.getElementById('galleryInstagramLink');
+    if (instagramUrl) {
+        instagramLink.href = instagramUrl;
+        instagramLink.classList.remove('hidden');
+    } else {
+        instagramLink.classList.add('hidden');
+    }
+    
+    // Mostrar la primera imagen
+    if (imagenes.length > 0) {
+        showImage(0);
+        setupGalleryNavigation();
+    }
+    
+    document.getElementById('novedadGalleryModal').classList.remove('hidden');
+    document.body.style.overflow = 'hidden'; // Prevenir scroll del fondo
+}
+
+function closeNovedadGallery() {
+    document.getElementById('novedadGalleryModal').classList.add('hidden');
+    document.body.style.overflow = 'auto'; // Restaurar scroll
+}
+
+function showImage(index) {
+    if (currentImages.length === 0) return;
+    
+    currentImageIndex = index;
+    const currentImg = document.getElementById('currentImage');
+    currentImg.src = currentImages[index];
+    
+    // Actualizar contador
+    document.getElementById('currentImageNumber').textContent = index + 1;
+    document.getElementById('totalImages').textContent = currentImages.length;
+    
+    // Mostrar/ocultar controles de navegación
+    const prevBtn = document.getElementById('prevButton');
+    const nextBtn = document.getElementById('nextButton');
+    const counter = document.getElementById('imageCounter');
+    
+    if (currentImages.length > 1) {
+        prevBtn.classList.toggle('hidden', index === 0);
+        nextBtn.classList.toggle('hidden', index === currentImages.length - 1);
+        counter.classList.remove('hidden');
+        setupThumbnails();
+    } else {
+        prevBtn.classList.add('hidden');
+        nextBtn.classList.add('hidden');
+        counter.classList.add('hidden');
+        document.getElementById('thumbnailContainer').classList.add('hidden');
+    }
+}
+
+function previousImage() {
+    if (currentImageIndex > 0) {
+        showImage(currentImageIndex - 1);
+    }
+}
+
+function nextImage() {
+    if (currentImageIndex < currentImages.length - 1) {
+        showImage(currentImageIndex + 1);
+    }
+}
+
+function setupGalleryNavigation() {
+    // Navegación con teclado
+    document.addEventListener('keydown', handleGalleryKeyboard);
+}
+
+function handleGalleryKeyboard(e) {
+    const modal = document.getElementById('novedadGalleryModal');
+    if (modal.classList.contains('hidden')) return;
+    
+    switch(e.key) {
+        case 'Escape':
+            closeNovedadGallery();
+            break;
+        case 'ArrowLeft':
+            previousImage();
+            break;
+        case 'ArrowRight':
+            nextImage();
+            break;
+    }
+}
+
+function setupThumbnails() {
+    const container = document.getElementById('thumbnailContainer');
+    
+    if (currentImages.length <= 1) {
+        container.classList.add('hidden');
+        return;
+    }
+    
+    container.innerHTML = '';
+    container.classList.remove('hidden');
+    
+    currentImages.forEach((img, index) => {
+        const thumb = document.createElement('div');
+        thumb.className = `w-12 h-12 rounded-lg overflow-hidden cursor-pointer border-2 transition-all duration-200 ${
+            index === currentImageIndex ? 'border-blue-500 opacity-100' : 'border-gray-600 opacity-60 hover:opacity-80'
+        }`;
+        thumb.innerHTML = `<img src="${img}" alt="Thumbnail ${index + 1}" class="w-full h-full object-cover">`;
+        thumb.onclick = () => showImage(index);
+        container.appendChild(thumb);
+    });
+}
+
+// Cerrar modal al hacer clic fuera de la imagen
+document.getElementById('novedadGalleryModal').addEventListener('click', function(e) {
+    if (e.target === this || e.target.id === 'imageContainer') {
+        closeNovedadGallery();
+    }
+});
+
+// Limpiar event listeners al cerrar
+function closeNovedadGallery() {
+    document.getElementById('novedadGalleryModal').classList.add('hidden');
+    document.body.style.overflow = 'auto';
+    document.removeEventListener('keydown', handleGalleryKeyboard);
+}
+
+// Variables para el carrusel de novedades
+let novedadesCurrentIndex = 0;
+let novedadesAutoSlideInterval;
+let novedadesTotalItems = 0;
+let novedadesItemsPerView = 1;
+
+// Inicializar carrusel de novedades
+function initNovedadesCarousel() {
+    const carousel = document.getElementById('novedades-carousel');
+    const items = carousel.children;
+    novedadesTotalItems = items.length;
+    
+    if (novedadesTotalItems === 0) return;
+    
+    // Calcular items por vista según el tamaño de pantalla
+    updateNovedadesItemsPerView();
+    
+    // Crear indicadores
+    createNovedadesIndicators();
+    
+    // Iniciar auto-slide
+    startNovedadesAutoSlide();
+    
+    // Pausar auto-slide al hover
+    carousel.addEventListener('mouseenter', stopNovedadesAutoSlide);
+    carousel.addEventListener('mouseleave', startNovedadesAutoSlide);
+    
+    // Actualizar en resize
+    window.addEventListener('resize', () => {
+        updateNovedadesItemsPerView();
+        updateNovedadesCarousel();
+    });
+}
+
+function updateNovedadesItemsPerView() {
+    if (window.innerWidth >= 1024) {
+        novedadesItemsPerView = 3; // lg: 3 items
+    } else if (window.innerWidth >= 768) {
+        novedadesItemsPerView = 2; // md: 2 items
+    } else {
+        novedadesItemsPerView = 1; // sm: 1 item
+    }
+}
+
+function createNovedadesIndicators() {
+    const indicatorsContainer = document.getElementById('novedades-indicators');
+    const maxIndex = Math.max(0, novedadesTotalItems - novedadesItemsPerView);
+    
+    if (maxIndex === 0) {
+        indicatorsContainer.style.display = 'none';
+        return;
+    }
+    
+    indicatorsContainer.innerHTML = '';
+    indicatorsContainer.style.display = 'flex';
+    
+    for (let i = 0; i <= maxIndex; i++) {
+        const indicator = document.createElement('button');
+        indicator.className = `w-2 h-2 rounded-full transition-all duration-300 ${
+            i === novedadesCurrentIndex ? 'bg-blue-500' : 'bg-gray-600 hover:bg-gray-500'
+        }`;
+        indicator.onclick = () => goToNovedadesSlide(i);
+        indicatorsContainer.appendChild(indicator);
+    }
+}
+
+function updateNovedadesCarousel() {
+    const carousel = document.getElementById('novedades-carousel');
+    const itemWidth = 100 / novedadesItemsPerView;
+    const translateX = -(novedadesCurrentIndex * itemWidth);
+    
+    carousel.style.transform = `translateX(${translateX}%)`;
+    
+    // Actualizar indicadores
+    const indicators = document.querySelectorAll('#novedades-indicators button');
+    indicators.forEach((indicator, index) => {
+        indicator.className = `w-2 h-2 rounded-full transition-all duration-300 ${
+            index === novedadesCurrentIndex ? 'bg-blue-500' : 'bg-gray-600 hover:bg-gray-500'
+        }`;
+    });
+    
+    // Actualizar visibilidad de botones de navegación
+    const prevBtn = document.getElementById('novedadesPrevBtn');
+    const nextBtn = document.getElementById('novedadesNextBtn');
+    const maxIndex = Math.max(0, novedadesTotalItems - novedadesItemsPerView);
+    
+    if (maxIndex === 0) {
+        prevBtn.style.display = 'none';
+        nextBtn.style.display = 'none';
+    } else {
+        prevBtn.style.display = 'block';
+        nextBtn.style.display = 'block';
+        prevBtn.style.opacity = novedadesCurrentIndex === 0 ? '0.5' : '0.8';
+        nextBtn.style.opacity = novedadesCurrentIndex >= maxIndex ? '0.5' : '0.8';
+    }
+}
+
+function moveNovedadesCarousel(direction) {
+    const maxIndex = Math.max(0, novedadesTotalItems - novedadesItemsPerView);
+    
+    if (direction === 'next') {
+        novedadesCurrentIndex = novedadesCurrentIndex >= maxIndex ? 0 : novedadesCurrentIndex + 1;
+    } else {
+        novedadesCurrentIndex = novedadesCurrentIndex <= 0 ? maxIndex : novedadesCurrentIndex - 1;
+    }
+    
+    updateNovedadesCarousel();
+}
+
+function goToNovedadesSlide(index) {
+    const maxIndex = Math.max(0, novedadesTotalItems - novedadesItemsPerView);
+    novedadesCurrentIndex = Math.min(index, maxIndex);
+    updateNovedadesCarousel();
+}
+
+function startNovedadesAutoSlide() {
+    if (novedadesTotalItems <= novedadesItemsPerView) return;
+    
+    stopNovedadesAutoSlide();
+    novedadesAutoSlideInterval = setInterval(() => {
+        moveNovedadesCarousel('next');
+    }, 5000); // Cambiar cada 5 segundos
+}
+
+function stopNovedadesAutoSlide() {
+    if (novedadesAutoSlideInterval) {
+        clearInterval(novedadesAutoSlideInterval);
+        novedadesAutoSlideInterval = null;
+    }
+}
+
+// Inicializar cuando la página se carga
+document.addEventListener('DOMContentLoaded', function() {
+    initNovedadesCarousel();
+});
 </script>
 </body></html>
