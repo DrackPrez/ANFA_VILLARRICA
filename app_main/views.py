@@ -51,11 +51,11 @@ def menu(request):
     proximos_partidos.sort(key=lambda x: (x['fecha'], x['hora'] or ''))
     return render(request, 'menu.html', {'proximos_partidos': proximos_partidos})
 
-@login_required
+
 def tercera_infantil(request):
     return render(request, '3era_infantil')
 
-@login_required
+
 def clubes(request):
     clubes = Clubes.objects.all()
     return render(request, 'clubes.html', {'clubes': clubes})
@@ -109,7 +109,7 @@ def clubes_delete(request, club_id):
         return redirect('clubes')
     return render(request, 'clubes_confirm_delete.html', {'club': club})
 
-@login_required
+
 def encargados_clubes(request):
     clubes = Clubes.objects.all().select_related('encargado')
     return render(request, 'encargados_clubes.html', {'clubes': clubes})
@@ -178,7 +178,7 @@ def calcular_tablero_general():
     )
     return clasificacion
 
-@login_required
+
 def serie_honor(request):
     if request.method == 'POST':
         if 'add_fase' in request.POST:
@@ -333,7 +333,7 @@ def calcular_tablero_general_femenino():
     )
     return clasificacion
 
-@login_required
+
 def serie_femenino(request):
     if request.method == 'POST':
         if 'add_fase' in request.POST:
@@ -485,7 +485,7 @@ def calcular_tablero_general_segunda_adultos():
     )
     return clasificacion
 
-@login_required
+
 def serie_segunda_adultos(request):
     if request.method == 'POST':
         if 'add_fase' in request.POST:
@@ -636,7 +636,7 @@ def calcular_tablero_general_seniors():
     )
     return clasificacion
 
-@login_required
+
 def serie_seniors(request):
     if request.method == 'POST':
         if 'add_fase' in request.POST:
@@ -788,7 +788,7 @@ def calcular_tablero_general_super_seniors():
     )
     return clasificacion
 
-@login_required
+
 def serie_super_seniors(request):
     if request.method == 'POST':
         if 'add_fase' in request.POST:
@@ -940,7 +940,7 @@ def calcular_tablero_general_segunda_infantil():
     )
     return clasificacion
 
-@login_required
+
 def serie_segunda_infantil(request):
     if request.method == 'POST':
         if 'add_fase' in request.POST:
@@ -1090,7 +1090,7 @@ def calcular_tablero_general_juvenil():
     )
     return clasificacion
 
-@login_required
+
 def serie_juvenil(request):
     if request.method == 'POST':
         if 'add_fase' in request.POST:
@@ -1242,7 +1242,7 @@ def calcular_tablero_general_primera_infantil():
     )
     return clasificacion
 
-@login_required
+
 def serie_primera_infantil(request):
     if request.method == 'POST':
         if 'add_fase' in request.POST:
@@ -1392,7 +1392,7 @@ def calcular_tablero_general_tercera_infantil():
     )
     return clasificacion
 
-@login_required
+
 def serie_tercera_infantil(request):
     if request.method == 'POST':
         if 'add_fase' in request.POST:

@@ -125,10 +125,12 @@
                 </table>
             </div>
         </div>
+        {% if user.is_authenticated %}
         <form method="post" class="mb-6 flex justify-center">
             {% csrf_token %}
-            <button type="submit" name="add_fase" value="1" class="bg-pink-600 hover:bg-pink-700 text-white font-bold py-2 px-6 rounded shadow transition">Añadir Fase</button> {# Changed button color #}
+            <button type="submit" name="add_fase" value="1" class="bg-pink-600 hover:bg-pink-700 text-white font-bold py-2 px-6 rounded shadow transition">Añadir Fase</button>
         </form>
+        {% endif %}
 
         {% if fases %}
         <!-- PAGINACIÓN DE FASES -->
@@ -146,6 +148,7 @@
             <div class="fase-page{% if forloop.first %} active{% endif %}" data-fase-index="{{ forloop.counter0 }}">
                 <div class="bg-pink-100 text-pink-800 font-bold rounded px-4 py-2 flex flex-col items-center justify-center mb-2 shadow">
                     <span class="text-lg text-center w-full">{{ fase.nombre }}</span>
+                    {% if user.is_authenticated %}
                     <div class="flex items-center justify-center mt-2">
                         <form method="post" style="display:inline;">
                             {% csrf_token %}
@@ -154,16 +157,20 @@
                             </button>
                         </form>
                     </div>
+                    {% endif %}
                 </div>
                 <div class="ml-4 mb-6">
+                    {% if user.is_authenticated %}
                     <form method="post" class="mb-2 flex items-center gap-2 justify-center">
                         {% csrf_token %}
                         <input type="hidden" name="fase_id" value="{{ fase.id }}">
                         <button type="submit" name="add_jornada" value="1" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-1 px-4 rounded shadow transition">Añadir Jornada</button>
                     </form>
+                    {% endif %}
                     {% for jornada in fase.jornadas.all %}
                         <div class="bg-purple-100 text-purple-800 font-semibold rounded px-3 py-1 flex flex-col items-center justify-center mb-1 shadow">
                             <span class="text-base text-center w-full">{{ jornada.nombre }}</span>
+                            {% if user.is_authenticated %}
                             <div class="flex items-center justify-center mt-2">
                                 <form method="post" style="display:inline;">
                                     {% csrf_token %}
@@ -173,6 +180,7 @@
                                 </form>
                                 <button type="button" onclick="openModal('{{ jornada.id }}')" class="ml-2 bg-green-600 hover:bg-green-700 text-white rounded px-2 py-1 text-xs">Añadir Partido</button>
                             </div>
+                            {% endif %}
                         </div>
                         <form method="post" class="mb-4">
                             {% csrf_token %}
@@ -192,21 +200,31 @@
                                         <th class="px-2 py-1 bg-gray-900">Cancha</th>
                                         <th class="px-2 py-1 bg-gray-900">Turno</th>
                                         <th class="px-2 py-1 bg-gray-900">Libre</th>
+                                        {% if user.is_authenticated %}
                                         <th class="px-2 py-1 bg-gray-900">Acciones</th>
+                                        {% endif %}
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {% for sh in jornada.partidos_femenino.all %} {# IMPORTANT CHANGE: partidos_femenino instead of partidos #}
+                                    {% for sh in jornada.partidos_femenino.all %}
                                     <tr id="jornada-{{ jornada.id }}-partido-{{ sh.id }}">
                                         <input type="hidden" name="id_{{ sh.id }}" value="{{ sh.id }}">
-                                        <td class="text-center text-white bg-purple-800 bg-opacity-50">{{ sh.equipo_local.club }}</td> {# Changed bg color #}
-                                        <td class="text-center text-white bg-purple-800 bg-opacity-50">{{ sh.estado_partido_local }}</td> {# Changed bg color #}
-                                        <td class="bg-purple-800 bg-opacity-50"> {# Changed bg color #}
+                                        <td class="text-center text-white bg-purple-800 bg-opacity-50">{{ sh.equipo_local.club }}</td>
+                                        <td class="text-center text-white bg-purple-800 bg-opacity-50">{{ sh.estado_partido_local }}</td>
+                                        <td class="bg-purple-800 bg-opacity-50">
+                                            {% if user.is_authenticated %}
                                             <input type="number" name="goles_local_{{ sh.id }}" value="{{ sh.goles_local }}" min="0" class="bg-gray-900 text-white rounded w-16 px-1">
+                                            {% else %}
+                                            <span class="text-center text-white">{{ sh.goles_local }}</span>
+                                            {% endif %}
                                         </td>
                                         <td class="text-center text-white bg-red-800 bg-opacity-50 font-bold">VS</td>
-                                        <td class="bg-pink-800 bg-opacity-50"> {# Changed bg color #}
+                                        <td class="bg-pink-800 bg-opacity-50">
+                                            {% if user.is_authenticated %}
                                             <input type="number" name="goles_visita_{{ sh.id }}" value="{{ sh.goles_visita }}" min="0" class="bg-gray-900 text-white rounded w-16 px-1">
+                                            {% else %}
+                                            <span class="text-center text-white">{{ sh.goles_visita }}</span>
+                                            {% endif %}
                                         </td>
                                         <td class="text-center text-white bg-pink-800 bg-opacity-50">{{ sh.estado_partido_visita }}</td> {# Changed bg color #}
                                         <td class="text-center text-white bg-pink-800 bg-opacity-50">{{ sh.equipo_visita.club }}</td> {# Changed bg color #}
@@ -215,18 +233,22 @@
                                         <td class="text-center text-white bg-gray-800 bg-opacity-50">{{ sh.cancha }}</td>
                                         <td class="text-center text-white bg-gray-800 bg-opacity-50">{{ sh.turno }}</td>
                                         <td class="text-center text-white bg-gray-800 bg-opacity-50">{{ sh.libre }}</td>
+                                        {% if user.is_authenticated %}
                                         <td class="bg-gray-800 bg-opacity-50">
                                             <button type="submit" name="delete_row" value="{{ sh.id }}" class="bg-red-600 hover:bg-red-700 text-white rounded px-2 py-1 text-xs" onclick="return confirm('¿Eliminar este partido?')">Eliminar</button>
                                             <button type="button" onclick="openEditModal('{{ sh.id }}', '{{ sh.equipo_local.id }}', '{{ sh.equipo_visita.id }}', '{{ sh.horario|time:'H:i' }}', '{{ sh.fecha|date:'Y-m-d' }}', '{{ sh.cancha }}', '{{ sh.turno }}', '{{ sh.libre }}')" class="bg-yellow-600 hover:bg-yellow-700 text-white rounded px-2 py-1 text-xs ml-1">Editar</button>
                                         </td>
+                                        {% endif %}
                                     </tr>
                                     {% empty %}
-                                    <tr><td colspan="12" class="text-center text-gray-400">No hay partidos en esta jornada.</td></tr>
+                                    <tr><td colspan="{% if user.is_authenticated %}13{% else %}12{% endif %}" class="text-center text-gray-400">No hay partidos en esta jornada.</td></tr>
                                     {% endfor %}
                                 </tbody>
                             </table>
                             </div>
+                            {% if user.is_authenticated %}
                             <button type="submit" class="mt-2 bg-green-600 hover:bg-green-700 text-white font-bold py-1 px-4 rounded shadow transition">Guardar Cambios</button>
+                            {% endif %}
                         </form>
                     {% empty %}
                         <div class="text-gray-400 mb-4 text-center">No hay jornadas en esta fase.</div>

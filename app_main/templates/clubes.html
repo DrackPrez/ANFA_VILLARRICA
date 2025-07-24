@@ -59,7 +59,9 @@
         <h1 class="text-4xl font-extrabold mb-4 text-red-600 drop-shadow">Clubes</h1>
         <div class="flex justify-between items-center mb-6">
             <p class="text-lg text-gray-200">Listado de clubes registrados.</p>
+            {% if user.is_authenticated %}
             <button onclick="openModal()" class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-full font-semibold shadow transition">Añadir Club</button>
+            {% endif %}
         </div>
         <div class="overflow-x-auto rounded-lg shadow">
             <table class="min-w-full bg-gray-800 text-gray-100">
@@ -75,7 +77,9 @@
                         <th class="px-4 py-2 text-center">2da Infantil</th>
                         <th class="px-4 py-2 text-center">3ra Infantil</th>
                         <th class="px-4 py-2 text-center">Femenino</th>
+                        {% if user.is_authenticated %}
                         <th class="px-4 py-2 text-left">Acciones</th>
+                        {% endif %}
                     </tr>
                 </thead>
                 <tbody>
@@ -91,6 +95,7 @@
                         <td class="px-2 py-2 text-center">{% if club.segunda_infantil %}✔️{% else %}—{% endif %}</td>
                         <td class="px-2 py-2 text-center">{% if club.tercera_infantil %}✔️{% else %}—{% endif %}</td>
                         <td class="px-2 py-2 text-center">{% if club.femenino %}✔️{% else %}—{% endif %}</td>
+                        {% if user.is_authenticated %}
                         <td class="px-4 py-2">
                             <button
                                 onclick='openModal(true, {
@@ -113,10 +118,11 @@
                                 class="px-3 py-1 bg-red-600 hover:bg-red-700 text-white rounded text-sm"
                             >Eliminar</button>
                         </td>
+                        {% endif %}
                     </tr>
                     {% empty %}
                     <tr>
-                        <td colspan="11" class="px-4 py-4 text-center text-gray-400">No hay clubes registrados.</td>
+                        <td colspan="{% if user.is_authenticated %}11{% else %}10{% endif %}" class="px-4 py-4 text-center text-gray-400">No hay clubes registrados.</td>
                     </tr>
                     {% endfor %}
                 </tbody>

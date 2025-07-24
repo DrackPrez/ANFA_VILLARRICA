@@ -51,7 +51,9 @@
                         <th class="px-4 py-2 text-left">2da Infantil</th>
                         <th class="px-4 py-2 text-left">3ra Infantil</th>
                         <th class="px-4 py-2 text-left">Femenino</th>
+                        {% if user.is_authenticated %}
                         <th class="px-4 py-2 text-left">Acciones</th>
+                        {% endif %}
                     </tr>
                 </thead>
                 <tbody>
@@ -68,6 +70,7 @@
                         <td class="px-4 py-2">{{ club.encargado.segunda_infantil }}</td>
                         <td class="px-4 py-2">{{ club.encargado.tercera_infantil }}</td>
                         <td class="px-4 py-2">{{ club.encargado.femenino }}</td>
+                        {% if user.is_authenticated %}
                         <td class="px-4 py-2">
                             <button
                                 onclick='openEncargadoModal({{ club.id }}, "{{ club.club|escapejs }}", {
@@ -85,10 +88,11 @@
                                 class="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded text-sm"
                             >Asignar/Editar</button>
                         </td>
+                        {% endif %}
                     </tr>
                     {% empty %}
                     <tr>
-                        <td colspan="12" class="px-4 py-4 text-center text-gray-400">No hay clubes registrados.</td>
+                        <td colspan="{% if user.is_authenticated %}12{% else %}11{% endif %}" class="px-4 py-4 text-center text-gray-400">No hay clubes registrados.</td>
                     </tr>
                     {% endfor %}
                 </tbody>
