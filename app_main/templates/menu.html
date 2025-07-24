@@ -8,52 +8,105 @@
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
 <style>
     body {
-        background: linear-gradient(135deg, #2d2a2e 0%, #1d3a7c 100%);
+        background: linear-gradient(135deg, #2d1b1b 0%, #7c1d1d 100%);
+        padding-top: 140px; /* Increased space for mobile header */
+    }
+    .sticky-header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 1000;
+        backdrop-filter: blur(10px);
+        background: rgba(17, 24, 39, 0.95);
+        border-bottom: 1px solid rgba(220, 38, 38, 0.3);
+    }
+    .sponsor-logos {
+        background: linear-gradient(135deg, rgba(220, 38, 38, 0.1) 0%, rgba(239, 68, 68, 0.1) 100%);
+        border: 1px solid rgba(220, 38, 38, 0.2);
+        border-radius: 12px;
+        padding: 8px 12px;
+        backdrop-filter: blur(5px);
+        box-shadow: 0 4px 20px rgba(220, 38, 38, 0.1);
+    }
+    .sponsor-logo {
+        transition: all 0.3s ease;
+        filter: brightness(0.9) contrast(1.1);
+        border-radius: 6px;
+        background: rgba(255, 255, 255, 0.05);
+        padding: 4px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    .sponsor-logo:hover {
+        transform: translateY(-2px) scale(1.05);
+        filter: brightness(1.1) contrast(1.2);
+        box-shadow: 0 8px 25px rgba(220, 38, 38, 0.3);
+    }
+    @media (max-width: 768px) {
+        body {
+            padding-top: 160px;
+        }
+        .sponsor-logos {
+            padding: 6px 8px;
+            border-radius: 8px;
+        }
+        .sponsor-logo {
+            padding: 3px;
+        }
     }
 </style>
 </head>
 <body class="text-gray-100">
 <div class="container mx-auto p-4 bg-gray-900 bg-opacity-95 rounded-xl shadow-lg">
-<header class="flex flex-col md:flex-row justify-between items-center mb-8">
-<div class="flex items-center mb-4 md:mb-0">
-<img alt="Logo ANFA" class="h-24 w-24 mr-4" src="{% static 'img/anfa.png' %}"/>
-<div>
-<h1 class="text-3xl font-extrabold text-blue-600 drop-shadow">ANFA Villarrica</h1>
-<p class="text-sm text-gray-300">Liga deportiva</p>
-<p class="text-sm text-gray-300">Asociación de Fútbol de Villarrica</p>
+<header class="sticky-header flex flex-col lg:flex-row justify-between items-center p-3 lg:p-4 space-y-3 lg:space-y-0">
+<div class="flex items-center justify-center lg:justify-start w-full lg:w-auto">
+<img alt="Logo ANFA" class="h-16 w-16 lg:h-24 lg:w-24 mr-3 lg:mr-4" src="{% static 'img/anfa.png' %}"/>
+<div class="text-center lg:text-left">
+<h1 class="text-xl lg:text-3xl font-extrabold text-red-600 drop-shadow">ANFA Villarrica</h1>
+<p class="text-xs lg:text-sm text-gray-300">Liga deportiva</p>
+<p class="text-xs lg:text-sm text-gray-300 hidden lg:block">Asociación de Fútbol de Villarrica</p>
 </div>
 </div>
-<div class="flex space-x-4 justify-end mt-2">
+
+<!-- Logos patrocinadores en el centro -->
+<div class="sponsor-logos flex items-center justify-center space-x-2 sm:space-x-4 lg:space-x-6 w-full lg:w-auto">
+    
+    <img alt="Andes Asesorías" class="sponsor-logo h-10 w-10 sm:h-12 sm:w-12 lg:h-14 lg:w-14 object-contain" src="{% static 'img/andes.png' %}"/>
+    <img alt="Novena Medios" class="sponsor-logo h-10 w-10 sm:h-12 sm:w-12 lg:h-14 lg:w-14 object-contain" src="{% static 'img/novena.png' %}"/>
+    <img alt="Demarca Sport" class="sponsor-logo h-10 w-10 sm:h-12 sm:w-12 lg:h-14 lg:w-14 object-contain" src="{% static 'img/demarca.png' %}"/>
+</div>
+
+<div class="flex space-x-2 sm:space-x-3 lg:space-x-4 justify-center lg:justify-end w-full lg:w-auto">
     <a href="https://www.instagram.com/anfavillarrica?igsh=MTYyeTczem44dXNhcg==/" target="_blank" rel="noopener noreferrer">
-        <img alt="Instagram" class="h-10 w-10" src="{% static 'img/instagram-icon.svg' %}"/>
+        <img alt="Instagram" class="h-8 w-8 lg:h-10 lg:w-10" src="{% static 'img/instagram-icon.svg' %}"/>
     </a>
     <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer">
-        <img alt="Facebook" class="h-10 w-10" src="{% static 'img/facebook-icon.svg' %}"/>
+        <img alt="Facebook" class="h-8 w-8 lg:h-10 lg:w-10" src="{% static 'img/facebook-icon.svg' %}"/>
     </a>
     <!-- Botones de autenticación -->
     {% if user.is_authenticated %}
         <form action="{% url 'logout' %}" method="post" class="inline">
             {% csrf_token %}
-            <button type="submit" class="bg-red-600 hover:bg-red-700 text-white font-semibold px-4 py-2 rounded-lg shadow transition">
+            <button type="submit" class="bg-red-600 hover:bg-red-700 text-white font-semibold px-2 py-1 sm:px-3 sm:py-2 lg:px-4 lg:py-2 rounded-lg shadow transition text-xs sm:text-sm">
                 Cerrar sesión
             </button>
         </form>
     {% else %}
-        <a href="{% url 'login' %}" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-lg shadow transition">
+        <a href="{% url 'login' %}" class="bg-red-600 hover:bg-red-700 text-white font-semibold px-2 py-1 sm:px-3 sm:py-2 lg:px-4 lg:py-2 rounded-lg shadow transition text-xs sm:text-sm">
             Iniciar sesión
         </a>
     {% endif %}
 </div>
 </header>
 <main>
-<section class="mb-12 p-6 border-2 border-blue-700 rounded-lg bg-gray-800 bg-opacity-80">
-<h2 class="text-xl font-semibold mb-2 text-center text-blue-300">QUIÉNES SOMOS</h2>
+<section class="mb-12 p-6 border-2 border-red-700 rounded-lg bg-gray-800 bg-opacity-80">
+<h2 class="text-xl font-semibold mb-2 text-center text-red-300">QUIÉNES SOMOS</h2>
 <p class="text-gray-200 text-center mb-4">La ANFA Villarrica (Asociación de Fútbol de Villarrica) es la liga deportiva que agrupa a 10 clubes asociados en Villarrica. Organizamos el Campeonato ANFA Villarrica 2025 @demarca_sport en el Estadio Municipal de Villarrica, promoviendo la pasión y el desarrollo del fútbol local.</p>
-<div class="text-center p-4 border border-dashed border-blue-700 rounded-md bg-gray-900 bg-opacity-80">
+<div class="text-center p-4 border border-dashed border-red-700 rounded-md bg-gray-900 bg-opacity-80">
     <p class="text-2xl font-bold text-white mb-4 tracking-wide">DIRECTORIO</p>
     <div class="flex flex-col md:flex-row justify-center items-center gap-4 mt-4">
-        <a href="{% url 'clubes' %}" class="bg-white text-blue-700 font-semibold px-6 py-3 rounded-lg shadow hover:bg-blue-100 transition">Clubes</a>
-        <a href="{% url 'encargados_clubes' %}" class="bg-white text-blue-700 font-semibold px-6 py-3 rounded-lg shadow hover:bg-blue-100 transition">Encargados-Clubes</a>
+        <a href="{% url 'clubes' %}" class="bg-white text-red-700 font-semibold px-6 py-3 rounded-lg shadow hover:bg-red-100 transition">Clubes</a>
+        <a href="{% url 'encargados_clubes' %}" class="bg-white text-red-700 font-semibold px-6 py-3 rounded-lg shadow hover:bg-red-100 transition">Encargados-Clubes</a>
     </div>
 </div>
 </section>
@@ -78,7 +131,7 @@
             <tbody>
                 {% if proximos_partidos %}
                     {% for partido in proximos_partidos %}
-                    <tr class="border-b border-gray-800 cursor-pointer hover:bg-yellow-900 transition"
+                    <tr class="border-b border-gray-800 cursor-pointer hover:bg-red-900 transition"
                         data-partido-id="{{ partido.id }}"
                         onclick="irAPartido('{{ partido.serie_url }}', '{{ partido.jornada_id }}', '{{ partido.id }}')">
                         <td class="px-2 py-2 text-center">{{ partido.fecha }}</td>
@@ -100,8 +153,8 @@
         </table>
     </div>
 </section>
-<section class="mb-12 p-6 border-2 border-green-700 rounded-lg bg-gray-800 bg-opacity-80">
-<h2 class="text-xl font-semibold mb-4 text-center text-green-300">NUESTROS CLUBES</h2>
+<section class="mb-12 p-6 border-2 border-red-700 rounded-lg bg-gray-800 bg-opacity-80">
+<h2 class="text-xl font-semibold mb-4 text-center text-red-300">NUESTROS CLUBES</h2>
 <style>
     .club-carousel-bg {
         background: linear-gradient(135deg, #18171a 0%, #0d3a1d 100%);
@@ -175,10 +228,7 @@
                 <img src="{% static 'img/pilmahue_villarrica.png' %}" alt="Pilmahue Villarrica">
                 <span>Pilmahue Villarrica</span>
             </div>
-            <div class="carousel-logo">
-                <img src="{% static 'img/club3.png' %}" alt="Logo Blanco">
-                <span>Logo </span>
-            </div>
+            
             <div class="carousel-logo">
                 <img src="{% static 'img/ferrovilla.png' %}" alt="Ferroviila Villarrica">
                 <span>Ferroviila Villarrica</span>
@@ -187,18 +237,12 @@
                 <img src="{% static 'img/anfa.png' %}" alt="ANFA Villarrica">
                 <span>ANFA Villarrica</span>
             </div>
-            <div class="carousel-logo">
-                <img src="{% static 'img/novena.png' %}" alt="Novena Medios">
-                <span>Novena Medios</span>
-            </div>
+            
             <div class="carousel-logo">
                 <img src="{% static 'img/kolping.png' %}" alt="Kolping Villarrica">
                 <span>Kolping Villarrica</span>
             </div>
-            <div class="carousel-logo">
-                <img src="{% static 'img/demarca.png' %}" alt="Demarca Sport">
-                <span>Demarca Sport</span>
-            </div>
+            
             <div class="carousel-logo">
                 <img src="{% static 'img/catolica.png' %}" alt="CDUC Villarrica">
                 <span>CDUC Villarrica</span>
@@ -215,10 +259,7 @@
                 <img src="{% static 'img/higins.png' %}" alt="O'Higgins Villarrica">
                 <span>O'Higgins Villarrica</span>
             </div>
-            <div class="carousel-logo">
-                <img src="{% static 'img/andes.png' %}" alt="Andes Asesorías">
-                <span>Andes Asesorías</span>
-            </div>
+            
             <div class="carousel-logo">
                 <img src="{% static 'img/club_villarrica.png' %}" alt="Club Deportivo Villarrica">
                 <span>Club Deportivo Villarrica</span>
@@ -248,10 +289,7 @@
                 <img src="{% static 'img/anfa.png' %}" alt="ANFA Villarrica">
                 <span>ANFA Villarrica</span>
             </div>
-            <div class="carousel-logo">
-                <img src="{% static 'img/novena.png' %}" alt="Novena Medios">
-                <span>Novena Medios</span>
-            </div>
+            
             <div class="carousel-logo">
                 <img src="{% static 'img/kolping.png' %}" alt="Kolping Villarrica">
                 <span>Kolping Villarrica</span>
@@ -288,11 +326,11 @@
     </div>
 </div>
 </section>
-<section class="p-6 border-2 border-purple-700 rounded-lg bg-gray-800 bg-opacity-80">
+<section class="p-6 border-2 border-red-700 rounded-lg bg-gray-800 bg-opacity-80">
 <div class="flex justify-center mb-2">
-    <span class="material-icons text-yellow-400 text-5xl drop-shadow-lg">emoji_events</span>
+    <span class="material-icons text-red-400 text-5xl drop-shadow-lg">emoji_events</span>
 </div>
-<h2 class="text-2xl font-extrabold mb-8 text-center text-purple-400 tracking-wide flex items-center justify-center gap-2">
+<h2 class="text-2xl font-extrabold mb-8 text-center text-red-400 tracking-wide flex items-center justify-center gap-2">
     CAMPEONATO DEMARCA SPORT ANFA VILLARRICA 2025
 </h2>
 <section class="py-12 bg-gradient-to-b from-gray-900 to-gray-800">
@@ -300,24 +338,24 @@
         <div class="flex flex-wrap justify-center gap-8">
             <!-- Infantiles: Primera, Segunda, Tercera -->
             <a href="{% url 'serie_primera_infantil' %}" class="group">
-                <div class="relative bg-gray-800 bg-opacity-95 border-2 border-blue-500 rounded-2xl shadow-xl p-8 w-64 flex flex-col items-center transform transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:border-blue-300">
-                    <div class="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div class="relative bg-gray-800 bg-opacity-95 border-2 border-red-500 rounded-2xl shadow-xl p-8 w-64 flex flex-col items-center transform transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:border-red-300">
+                    <div class="absolute inset-0 bg-gradient-to-br from-red-500/20 to-red-600/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                     <span class="material-icons text-blue-400 text-5xl mb-4 group-hover:animate-pulse">sports_soccer</span>
                     <h3 class="text-xl font-semibold text-white tracking-tight">Primera Infantil</h3>
                     <p class="text-sm text-gray-300 mt-2">Competición para los más jóvenes talentos</p>
                 </div>
             </a>
             <a href="{% url 'serie_segunda_infantil' %}" class="group">
-                <div class="relative bg-gray-800 bg-opacity-95 border-2 border-green-500 rounded-2xl shadow-xl p-8 w-64 flex flex-col items-center transform transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:border-green-300">
-                    <div class="absolute inset-0 bg-gradient-to-br from-green-500/20 to-teal-500/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div class="relative bg-gray-800 bg-opacity-95 border-2 border-white rounded-2xl shadow-xl p-8 w-64 flex flex-col items-center transform transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:border-gray-300">
+                    <div class="absolute inset-0 bg-gradient-to-br from-white/20 to-gray-300/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                     <span class="material-icons text-green-400 text-5xl mb-4 group-hover:animate-pulse">sports_soccer</span>
                     <h3 class="text-xl font-semibold text-white tracking-tight">Segunda Infantil</h3>
                     <p class="text-sm text-gray-300 mt-2">Desarrollo de habilidades en equipo</p>
                 </div>
             </a>
             <a href="{% url 'serie_tercera_infantil' %}" class="group">
-                <div class="relative bg-gray-800 bg-opacity-95 border-2 border-yellow-500 rounded-2xl shadow-xl p-8 w-64 flex flex-col items-center transform transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:border-yellow-300">
-                    <div class="absolute inset-0 bg-gradient-to-br from-yellow-500/20 to-orange-500/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div class="relative bg-gray-800 bg-opacity-95 border-2 border-red-300 rounded-2xl shadow-xl p-8 w-64 flex flex-col items-center transform transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:border-red-200">
+                    <div class="absolute inset-0 bg-gradient-to-br from-red-300/20 to-red-400/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                     <span class="material-icons text-yellow-400 text-5xl mb-4 group-hover:animate-pulse">sports_soccer</span>
                     <h3 class="text-xl font-semibold text-white tracking-tight">Tercera Infantil</h3>
                     <p class="text-sm text-gray-300 mt-2">Iniciación al fútbol competitivo</p>
@@ -325,8 +363,8 @@
             </a>
             <!-- Juvenil -->
             <a href="{% url 'serie_juvenil' %}" class="group">
-                <div class="relative bg-gray-800 bg-opacity-95 border-2 border-indigo-500 rounded-2xl shadow-xl p-8 w-64 flex flex-col items-center transform transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:border-indigo-300">
-                    <div class="absolute inset-0 bg-gradient-to-br from-indigo-500/20 to-blue-500/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div class="relative bg-gray-800 bg-opacity-95 border-2 border-red-600 rounded-2xl shadow-xl p-8 w-64 flex flex-col items-center transform transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:border-red-400">
+                    <div class="absolute inset-0 bg-gradient-to-br from-red-600/20 to-red-700/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                     <span class="material-icons text-indigo-400 text-5xl mb-4 group-hover:animate-pulse">sports_volleyball</span>
                     <h3 class="text-xl font-semibold text-white tracking-tight">Juvenil</h3>
                     <p class="text-sm text-gray-300 mt-2">Preparación para el siguiente nivel</p>
@@ -334,33 +372,33 @@
             </a>
             <!-- Adultos -->
             <a href="{% url 'serie_honor' %}" class="group">
-                <div class="relative bg-gray-800 bg-opacity-95 border-2 border-red-500 rounded-2xl shadow-xl p-8 w-64 flex flex-col items-center transform transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:border-red-300">
-                    <div class="absolute inset-0 bg-gradient-to-br from-red-500/20 to-pink-500/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div class="relative bg-gray-800 bg-opacity-95 border-2 border-red-800 rounded-2xl shadow-xl p-8 w-64 flex flex-col items-center transform transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:border-red-600">
+                    <div class="absolute inset-0 bg-gradient-to-br from-red-800/20 to-red-900/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                     <span class="material-icons text-red-400 text-5xl mb-4 group-hover:animate-pulse">person</span>
-                    <h3 class="text-xl font-semibold text-white tracking-tight">1ra Adultos Honor</h3>
+                    <h3 class="text-xl font-semibold text-white tracking-tight">Primera Adultos Honor</h3>
                     <p class="text-sm text-gray-300 mt-2">Élite del fútbol adulto</p>
                 </div>
             </a>
             <a href="{% url 'serie_segunda_adultos' %}" class="group">
-                <div class="relative bg-gray-800 bg-opacity-95 border-2 border-teal-500 rounded-2xl shadow-xl p-8 w-64 flex flex-col items-center transform transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:border-teal-300">
-                    <div class="absolute inset-0 bg-gradient-to-br from-teal-500/20 to-cyan-500/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div class="relative bg-gray-800 bg-opacity-95 border-2 border-red-400 rounded-2xl shadow-xl p-8 w-64 flex flex-col items-center transform transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:border-red-300">
+                    <div class="absolute inset-0 bg-gradient-to-br from-red-400/20 to-red-500/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                     <span class="material-icons text-teal-400 text-5xl mb-4 group-hover:animate-pulse">person</span>
-                    <h3 class="text-xl font-semibold text-white tracking-tight">2da Adultos</h3>
+                    <h3 class="text-xl font-semibold text-white tracking-tight">Segunda Adultos</h3>
                     <p class="text-sm text-gray-300 mt-2">Competencia de alto nivel</p>
                 </div>
             </a>
             <!-- Seniors -->
             <a href="{% url 'serie_seniors' %}" class="group">
-                <div class="relative bg-gray-800 bg-opacity-95 border-2 border-orange-500 rounded-2xl shadow-xl p-8 w-64 flex flex-col items-center transform transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:border-orange-300">
-                    <div class="absolute inset-0 bg-gradient-to-br from-orange-500/20 to-amber-500/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div class="relative bg-gray-800 bg-opacity-95 border-2 border-gray-300 rounded-2xl shadow-xl p-8 w-64 flex flex-col items-center transform transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:border-white">
+                    <div class="absolute inset-0 bg-gradient-to-br from-gray-300/20 to-white/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                     <span class="material-icons text-orange-400 text-5xl mb-4 group-hover:animate-pulse">person_4</span>
                     <h3 class="text-xl font-semibold text-white tracking-tight">Seniors</h3>
                     <p class="text-sm text-gray-300 mt-2">Experiencia y pasión</p>
                 </div>
             </a>
             <a href="{% url 'serie_super_seniors' %}" class="group">
-                <div class="relative bg-gray-800 bg-opacity-95 border-2 border-amber-500 rounded-2xl shadow-xl p-8 w-64 flex flex-col items-center transform transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:border-amber-300">
-                    <div class="absolute inset-0 bg-gradient-to-br from-amber-500/20 to-yellow-500/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div class="relative bg-gray-800 bg-opacity-95 border-2 border-red-200 rounded-2xl shadow-xl p-8 w-64 flex flex-col items-center transform transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:border-red-100">
+                    <div class="absolute inset-0 bg-gradient-to-br from-red-200/20 to-red-300/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                     <span class="material-icons text-amber-400 text-5xl mb-4 group-hover:animate-pulse">person_4</span>
                     <h3 class="text-xl font-semibold text-white tracking-tight">Super Seniors</h3>
                     <p class="text-sm text-gray-300 mt-2">Leyendas del juego</p>
@@ -368,8 +406,8 @@
             </a>
             <!-- Femenino -->
             <a href="{% url 'serie_femenino' %}" class="group">
-                <div class="relative bg-gray-800 bg-opacity-95 border-2 border-pink-500 rounded-2xl shadow-xl p-8 w-64 flex flex-col items-center transform transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:border-pink-300">
-                    <div class="absolute inset-0 bg-gradient-to-br from-pink-500/20 to-rose-500/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div class="relative bg-gray-800 bg-opacity-95 border-2 border-pink-300 rounded-2xl shadow-xl p-8 w-64 flex flex-col items-center transform transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:border-pink-200">
+                    <div class="absolute inset-0 bg-gradient-to-br from-pink-300/20 to-pink-400/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                     <span class="material-icons text-pink-400 text-5xl mb-4 group-hover:animate-pulse">female</span>
                     <h3 class="text-xl font-semibold text-white tracking-tight">Femenino</h3>
                     <p class="text-sm text-gray-300 mt-2">Fuerza y talento femenino</p>
@@ -379,8 +417,8 @@
     </div>
 </section>
 </main>
-<footer class="text-center mt-12 py-4 border-t border-blue-700">
-<p class="text-sm text-blue-300">© 2025 ANFA Villarrica. Todos los derechos reservados.</p>
+<footer class="text-center mt-12 py-4 border-t border-red-700">
+<p class="text-sm text-red-300">© 2025 ANFA Villarrica. Todos los derechos reservados.</p>
 </footer>
 </div>
 <script>
