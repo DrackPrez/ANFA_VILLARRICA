@@ -72,6 +72,16 @@
     .preserve-whitespace {
         white-space: pre-line;
     }
+    /* Agregar estos estilos */
+    #novedadGalleryModal {
+        z-index: 9999;
+    }
+    .carousel-nav-button {
+        z-index: 1;
+    }
+    .modal-overlay {
+        z-index: 9998;
+    }
 </style>
 </head>
 <body class="text-gray-100">
@@ -148,10 +158,10 @@
         <div class="relative overflow-hidden pb-3">
             <!-- Botones de navegación -->
             {% if novedades_recientes|length > 1 %}
-            <button id="novedadesPrevBtn" onclick="moveNovedadesCarousel('prev')" class="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-full shadow-lg transition-all duration-300 opacity-80 hover:opacity-100">
+            <button id="novedadesPrevBtn" onclick="moveNovedadesCarousel('prev')" class="absolute left-0 top-1/2 transform -translate-y-1/2 bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-full shadow-lg transition-all duration-300 opacity-80 hover:opacity-100" style="z-index: 1;">
                 <span class="material-icons">chevron_left</span>
             </button>
-            <button id="novedadesNextBtn" onclick="moveNovedadesCarousel('next')" class="absolute right-0 top-1/2 transform -translate-y-1/2 z-10 bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-full shadow-lg transition-all duration-300 opacity-80 hover:opacity-100">
+            <button id="novedadesNextBtn" onclick="moveNovedadesCarousel('next')" class="absolute right-0 top-1/2 transform -translate-y-1/2 bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-full shadow-lg transition-all duration-300 opacity-80 hover:opacity-100" style="z-index: 1;">
                 <span class="material-icons">chevron_right</span>
             </button>
             {% endif %}
