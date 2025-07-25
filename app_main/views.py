@@ -52,7 +52,7 @@ def menu(request):
                 'serie_url': reverse(url_name),
             })
         # Resultados recientes (partidos jugados de hoy a 5 días atrás, con resultado)
-        for p in modelo.objects.filter(fecha__gte=hoy - timedelta(days=3), fecha__lte=hoy).order_by('-fecha', '-horario'):
+        for p in modelo.objects.filter(fecha__gte=hoy - timedelta(days=5), fecha__lte=hoy).order_by('-fecha', '-horario'):
             # Solo mostrar si tiene goles ingresados (ambos equipos)
             goles_local = getattr(p, 'goles_local', None)
             goles_visita = getattr(p, 'goles_visita', None)
@@ -1598,8 +1598,16 @@ def novedad_edit(request, novedad_id):
         # Manejar nuevas imágenes
         imagenes = request.FILES.getlist('imagenes')
         if imagenes:
-            # Eliminar imágenes existentes si se suben nuevas
-            novedad.imagenes.all().delete()
+            # Eliminar imágenes existentes (incluyendo archivos físicos)
+            for img in novedad.imagenes.all():
+                if img.imagen and img.imagen.name:
+                    try:
+                        import os
+                        if os.path.isfile(img.imagen.path):
+                            os.remove(img.imagen.path)
+                    except Exception as e:
+                        print(f"Error al eliminar archivo {img.imagen.path}: {e}")
+                img.delete()
             # Crear nuevas imágenes
             for i, imagen in enumerate(imagenes[:5]):  # Limitar a 5 imágenes
                 NovedadImagen.objects.create(
