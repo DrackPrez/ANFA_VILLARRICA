@@ -47,7 +47,9 @@
         }
         function showDeleteModal(clubId, clubName) {
             document.getElementById('delete-modal-bg').classList.remove('hidden');
-            document.getElementById('delete-form').action = `/menu/clubes/delete/${clubId}/`;
+            // Use Django's URL pattern for clubes_delete
+            const url = "{% url 'clubes_delete' 0 %}".replace('0', clubId);
+            document.getElementById('delete-form').action = url;
             document.getElementById('delete-modal-text').textContent = `¿Estás seguro de que deseas eliminar el club "${clubName}"?`;
         }
         function closeDeleteModal() {
