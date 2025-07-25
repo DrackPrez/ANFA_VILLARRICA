@@ -55,6 +55,13 @@
             padding: 3px;
         }
     }
+    .line-clamp-3 {
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
 </style>
 </head>
 <body class="text-gray-100">
@@ -128,7 +135,7 @@
     </div>
     
     {% if novedades_recientes %}
-        <div class="relative overflow-hidden">
+        <div class="relative overflow-hidden pb-3">
             <!-- Botones de navegación -->
             {% if novedades_recientes|length > 1 %}
             <button id="novedadesPrevBtn" onclick="moveNovedadesCarousel('prev')" class="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-full shadow-lg transition-all duration-300 opacity-80 hover:opacity-100">
