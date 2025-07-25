@@ -9,13 +9,14 @@ from .models import Novedad, NovedadImagen
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from collections import defaultdict
-from datetime import date
+from datetime import date, timedelta
 from django.urls import reverse
 from django.http import JsonResponse
 
 def menu(request):
     hoy = date.today()
     proximos_partidos = []
+    resultados_recientes = []
 
     # (modelo, nombre legible de la serie, nombre de la url de la serie)
     series = [
@@ -31,6 +32,7 @@ def menu(request):
     ]
 
     for modelo, nombre_serie, url_name in series:
+        # Próximos partidos
         for p in modelo.objects.filter(fecha__gte=hoy).order_by('fecha', 'horario'):
             # Acortar la fase a las primeras dos palabras
             fase_nombre = ''
@@ -49,14 +51,40 @@ def menu(request):
                 'cancha': p.cancha,
                 'serie_url': reverse(url_name),
             })
+        # Resultados recientes (partidos jugados de hoy a 5 días atrás, con resultado)
+        for p in modelo.objects.filter(fecha__gte=hoy - timedelta(days=3), fecha__lte=hoy).order_by('-fecha', '-horario'):
+            # Solo mostrar si tiene goles ingresados (ambos equipos)
+            goles_local = getattr(p, 'goles_local', None)
+            goles_visita = getattr(p, 'goles_visita', None)
+            if goles_local is not None and goles_visita is not None and (goles_local != '' and goles_visita != ''):
+                fase_nombre = ''
+                if p.jornada and p.jornada.fase and p.jornada.fase.nombre:
+                    fase_nombre = ' '.join(p.jornada.fase.nombre.split()[:2])
+                resultados_recientes.append({
+                    'id': p.id,
+                    'fecha': p.fecha,
+                    'hora': p.horario if hasattr(p, 'horario') else getattr(p, 'hora', None),
+                    'serie': nombre_serie,
+                    'fase': fase_nombre,
+                    'jornada': p.jornada.nombre if p.jornada else '',
+                    'jornada_id': p.jornada.id if p.jornada else '',
+                    'equipo_local': p.equipo_local,
+                    'equipo_visita': p.equipo_visita,
+                    'goles_local': goles_local,
+                    'goles_visita': goles_visita,
+                    'cancha': p.cancha,
+                    'serie_url': reverse(url_name),
+                })
 
     proximos_partidos.sort(key=lambda x: (x['fecha'], x['hora'] or ''))
+    resultados_recientes.sort(key=lambda x: (x['fecha'], x['hora'] or ''), reverse=True)
     
     # Obtener más novedades para el carrusel (mostrar hasta 10)
     novedades_recientes = Novedad.objects.filter(activo=True)[:10]
     
     return render(request, 'menu.html', {
         'proximos_partidos': proximos_partidos,
+        'resultados_recientes': resultados_recientes,
         'novedades_recientes': novedades_recientes
     })
 
@@ -1265,6 +1293,7 @@ def serie_primera_infantil(request):
             if next_num > 10:
                 next_num = 10
             nombre_ordinal = ordinales[next_num - 1] if next_num <= 10 else f"{next_num}ª"
+
             nombre_fase = f"{nombre_ordinal} RUEDA - APERTURA CAMPEONATO DEMARCA SPORT ANFA 2025 PRIMERA INFANTIL"
             if not Fase.objects.filter(nombre=nombre_fase).exists():
                 Fase.objects.create(nombre=nombre_fase)

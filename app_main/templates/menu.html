@@ -4,6 +4,7 @@
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>ANFA Villarrica</title>
+<link rel="icon" type="image/png" href="{% static 'img/logo-anfa-villarrica.png' %}"/>
 <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
 <style>
@@ -276,6 +277,53 @@
                 {% else %}
                     <tr>
                         <td colspan="8" class="px-4 py-4 text-center text-gray-400">No hay partidos próximos registrados.</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<!-- NUEVO: Resultados recientes -->
+<section class="mb-12 p-6 border-2 border-green-500 rounded-lg bg-gray-800 bg-opacity-80">
+    <h2 class="text-xl font-semibold mb-4 text-center text-green-300">RESULTADOS RECIENTES</h2>
+    <div class="overflow-x-auto rounded-lg shadow">
+        <table class="min-w-full bg-gray-900 text-gray-100 text-sm">
+            <thead>
+                <tr>
+                    <th class="px-2 py-2">Fecha</th>
+                    <th class="px-2 py-2">Hora</th>
+                    <th class="px-2 py-2">Serie</th>
+                    <th class="px-2 py-2">Fase</th>
+                    <th class="px-2 py-2">Jornada</th>
+                    <th class="px-2 py-2">Local</th>
+                    <th class="px-2 py-2">Goles</th>
+                    <th class="px-2 py-2">Visita</th>
+                    <th class="px-2 py-2">Goles</th>
+                    <th class="px-2 py-2">Cancha</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if resultados_recientes %}
+                    {% for partido in resultados_recientes %}
+                    <tr class="border-b border-gray-800 cursor-pointer hover:bg-green-900 transition"
+                        data-partido-id="{{ partido.id }}"
+                        onclick="irAPartido('{{ partido.serie_url }}', '{{ partido.jornada_id }}', '{{ partido.id }}')">
+                        <td class="px-2 py-2 text-center">{{ partido.fecha }}</td>
+                        <td class="px-2 py-2 text-center">{{ partido.hora }}</td>
+                        <td class="px-2 py-2 text-center">{{ partido.serie }}</td>
+                        <td class="px-2 py-2 text-center">{{ partido.fase }}</td>
+                        <td class="px-2 py-2 text-center">{{ partido.jornada }}</td>
+                        <td class="px-2 py-2 text-center font-bold">{{ partido.equipo_local }}</td>
+                        <td class="px-2 py-2 text-center text-lg font-semibold text-green-400">{{ partido.goles_local }}</td>
+                        <td class="px-2 py-2 text-center font-bold">{{ partido.equipo_visita }}</td>
+                        <td class="px-2 py-2 text-center text-lg font-semibold text-green-400">{{ partido.goles_visita }}</td>
+                        <td class="px-2 py-2 text-center">{{ partido.cancha }}</td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="10" class="px-4 py-4 text-center text-gray-400">No hay resultados recientes registrados.</td>
                     </tr>
                 {% endif %}
             </tbody>
